@@ -54,6 +54,7 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 
 ## How to use
 
+0. **Install in the app repo, project scope** (never global; it is per app): `npx skills add wiserflow/app-launch-standard` from the repo root; commit the skill folder and `skills-lock.json`. Then run `scripts/init.py` from the installed skill (e.g. `python3 .claude/skills/app-launch-standard/scripts/init.py`). **Upgrade:** reinstall/update the skill the same way, then `init.py --force` (keeps `STATUS.md`, adds `todo` rows for new items).
 1. **Kickoff — pick the track** (`areas/scaffold.md`):
    - **Greenfield** (new app): create the repo from the starter, then copy this folder to `<repo>/docs/launch/`.
    - **Pre-launch** (code exists, not in production): same as brownfield, but with no live users or data the order is free; follow *Pre-launch* in `areas/scaffold.md`.

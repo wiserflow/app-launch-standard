@@ -17,6 +17,8 @@ Tools mentioned are suggestions; the requirement is the item.
 npx skills add wiserflow/app-launch-standard
 ```
 
+Install it in each app repo (project scope, not global). Then `python3 .claude/skills/app-launch-standard/scripts/init.py` copies the kit to `docs/launch/` and creates `STATUS.md`. To upgrade, update the skill and rerun `init.py --force`: it keeps `STATUS.md` and adds the new items.
+
 Then ask your agent things like:
 
 - "Start a new app following the app launch standard."
