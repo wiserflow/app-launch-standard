@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | ENG-01 | 1 | Main protected; every change via PR with CI green and ≥1 review (human or agent) before merge (CI-01) |
 | ENG-02 | 1 | Written **definition of done**: tests, verified as a user, docs/changelog, flag or rollback plan, no open placeholder |
-| ENG-03 | 1 | PR template: what, why, how tested, risk/rollback; conventional commits enforced (commitlint) |
+| ENG-03 | 1 | PR template: what, why, how tested, risk/rollback; conventional commits enforced (e.g. commitlint) |
 | ENG-04 | 1 | Open dependencies tracked in one file (`docs/PENDING.md`) with ids, closed at session end |
 | ENG-05 | 2 | DORA four keys tracked: deploy frequency, lead time, change-fail rate, time to restore |
 | ENG-06 | 2 | Blameless postmortems in the repo with tracked action items (OPS-06) |

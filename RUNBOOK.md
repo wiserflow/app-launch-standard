@@ -5,19 +5,19 @@
 **T-14 days**
 
 - [ ] All L1 items checked with evidence
-- [ ] DES gates green: `design.md lint`, Tailwind lint, `impeccable detect`, visual baselines, axe
+- [ ] DES gates green: design-token lint, utility-class/CSS lint, design-rule detector in CI, visual baselines, accessibility scan (e.g. `design.md lint`, Tailwind lint, `impeccable detect`, axe)
 - [ ] Legal texts published after lawyer review
 - [ ] DMARC at `quarantine`; EML-09 inbox test done
-- [ ] PERF-B8 load test and SEC-10 scan done on staging
-- [ ] INF-03 external port scan clean; DB-03 restore test passed; CI-06 rollback rehearsed
+- [ ] PERF-B8 load test done on staging; SEC-10 DAST scan on staging (L2 — if done; not a launch blocker)
+- [ ] INF-03 external port scan clean; DB-03 restore test passed; CI-06/OPS-04 rollback rehearsed
 
 **T-1 day**
 
 - [ ] Billing in live mode: real purchase + refund
 - [ ] Production error reaches error tracker with correct release
 - [ ] Alerts reach phone (OPS-03)
-- [ ] Status page up
-- [ ] New features behind flags where risky
+- [ ] Status page up — OPS-05 (L2 — if done; not a launch blocker)
+- [ ] New features behind flags where risky — PLT-09/ADM-05 (L2 — if done; not a launch blocker)
 
 **Launch day**
 

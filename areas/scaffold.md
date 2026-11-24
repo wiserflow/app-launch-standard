@@ -1,13 +1,13 @@
 # Scaffold and starter kit (SCF)
 
-Goal: day 1 of a new app starts from a working monorepo with the house stack and the house layers already in place — not from an empty folder, and not by copying files by hand from the last app. The house stack below is an **opinionated default** (TypeScript web SaaS); any stack works — pick per target (→ `platforms.md`) and record it (SCF-02, SCF-11).
+Goal: day 1 of a new app starts from a working monorepo with the reference stack and the house layers already in place — not from an empty folder, and not by copying files by hand from the last app. "House" means your organization's reference stack and starter, if any; with none, the ADR (SCF-02, SCF-11) records the chosen stack and the kit is built per app. The stack below is an **example reference stack** (TypeScript web SaaS); any stack works — pick per target (→ `platforms.md`) and record it (SCF-02, SCF-11).
 
 Two layers:
 
-1. **Generated base** — [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack) (`create-better-t-stack`, ~5.9k stars, active): type-safe monorepo with chosen frontend, backend, API, ORM, auth, addons. Minimal on purpose; no billing/email/admin.
+1. **Generated base** — example: [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack) (`create-better-t-stack`, ~5.9k stars, active): type-safe monorepo with chosen frontend, backend, API, ORM, auth, addons. Minimal on purpose; no billing/email/admin.
 2. **House kit** — everything the base lacks and every app needs (this standard's L1 items that are code). Lives in **one** maintained starter repo and in a private shadcn registry, never re-copied from a previous product.
 
-## Base command (house stack)
+## Base command (example reference stack)
 
 ```bash
 # validate first, then run without --dry-run
@@ -18,7 +18,7 @@ bun create better-t-stack@latest <app> \
   --examples none --package-manager bun --git --install --dry-run
 ```
 
-Change flags per app (`--frontend tanstack-start`, `native-uniwind` for Expo, `fumadocs` instead of `starlight`). Visual builder: better-t-stack.dev. Claude Code plugin (MCP + skills that plan a valid stack): see `TOOLING.md`.
+Change flags per app (`--frontend tanstack-start`, `native-uniwind` for Expo, `fumadocs` instead of `starlight`). Visual builder: better-t-stack.dev. Agent plugin (MCP + skills that plan a valid stack; Claude Code example): see `TOOLING.md`.
 
 ## House kit (layered on top of the base)
 
@@ -66,12 +66,12 @@ The generated base is **not** run over an existing repo — it overwrites struct
 
 Order of attack follows **risk, not phase**: safety net (SCF-13) → L1 gaps that can lose data or money (SEC, DB, BIL, LGL) → the rest by phase.
 
-How much of the kit fits depends on the stack: same house stack (Hono + Drizzle + Better Auth + Bun) → packages drop in; different stack → the checklist still applies, items are implemented in the app's own idiom.
+How much of the kit fits depends on the stack: same stack as the kit (e.g. Hono + Drizzle + Better Auth + Bun) → packages drop in; different stack → the checklist still applies, items are implemented in the app's own idiom.
 
 | ID | L | Requirement |
 | --- | --- | --- |
 | SCF-10 | 1 | Gap audit: every item of each applicable area marked in `docs/launch/STATUS.md` (`scripts/init.py`, `scripts/status.py`) as `ok (evidence)` / `missing` / `diverges (ADR link)`; `missing` L1 items become tasks citing their IDs |
-| SCF-11 | 1 | Stack diff vs house stack recorded in `docs/decisions/` (ADR): what stays, what converges, what never will and why |
+| SCF-11 | 1 | Stack diff vs the reference stack (if none: the chosen stack and why) recorded in `docs/decisions/` (ADR): what stays, what converges, what never will and why |
 | SCF-12 | 1 | Kit adopted one package per PR, behind a flag where it changes runtime behavior, with a rollback path; the affected journey has a smoke/e2e test **before** the swap; schema changes are additive first (expand → migrate → contract) |
 | SCF-13 | 1 | Safety net before any kit adoption: OBS-01 error tracking, OBS-03 health checks, DB-03 backup with restore tested, SEC-07 secrets out of the repo, CI-06 rollback command |
 

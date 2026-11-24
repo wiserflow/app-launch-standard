@@ -14,3 +14,4 @@ Written to satisfy GDPR-style privacy laws (GDPR, UK GDPR, LGPD, CCPA/CPRA); con
 | LGL-08 | 2 | Internal record of processing activities (ROPA) |
 | LGL-09 | 2 | DPA template for B2B customers |
 | LGL-10 | 3 | Sensitive data (health, biometrics, minors): specific consent, encryption at rest, access logging |
+| LGL-11 | 1 | Security-incident / personal-data-breach procedure: named owner + backup decide; severity triage; evidence preserved; regulator notified within the legal deadline of each jurisdiction served (e.g. GDPR Art. 33: 72 h); affected users notified when risk is high (e.g. Art. 34); processor→controller notification; breach register kept even when not notified; pre-written templates; postmortem → OPS-06 |
