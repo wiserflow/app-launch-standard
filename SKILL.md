@@ -50,7 +50,7 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 | Managed hosting only (no self-hosting) | INF n/a |
 | Single language and country | I18N-07+ and extra payment methods deferred; keep I18N-01..06 |
 
-**Then:** record the answers in the `## Kickoff` block of `docs/launch/STATUS.md` (so the next session does not re-ask), show a **5-line plan**, and **wait for "go" before editing code.**
+**Then:** record the answers in the `## Kickoff` block of `docs/launch/STATUS.md` (so the next session does not re-ask), show a **5-line plan**, and **wait for "go" before editing code.** When the goal changes later (e.g. audit done, now fixing), update the Kickoff answers first; the areas that depend on them (e.g. SPEC) change with them.
 
 ## How to use
 
@@ -65,13 +65,14 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
    Then go through the global map and mark each area `applies` / `n/a (reason)` in `docs/launch/STATUS.md` — n/a areas are not deleted, so the decision is visible.
 2. **Per phase:** before starting a phase, the agent reads only that phase's area files and installs that phase's tools from `TOOLING.md` (ask the user first; project scope).
 3. **IDs everywhere:** plans, PRs, commits and the repo's pending list (default `docs/PENDING.md`) cite item IDs (`EML-03`, `PERF-B4`). Items needing a human (account, lawyer, pricing decision) go to its `## Needs user` section. Paths named in items (`docs/decisions/`, `docs/PENDING.md`) are defaults: an existing equivalent in the repo counts.
-4. **Evidence:** mark `ok` only with evidence next to it (test name, screenshot path, URL, command output). "Deployed" is not evidence; "exercised in staging as a user" is.
+4. **Evidence:** mark `ok` only with evidence next to it (test name, screenshot path, URL, command output). "Deployed" is not evidence, and neither is a subagent or tool reporting "done": the evidence is the test or command output the main session saw; "exercised in staging as a user" is.
    - Partly met → `diverges`; the evidence names which parts fail.
    - Fails only because another item fails (e.g. no CI) → status `missing`/`diverges` with evidence starting `→ CI-01`; `status.py` lists these apart, so one root cause is not counted as many gaps. Mark it even when the target is L2: while the target is outside `--level` (or already closed), the item stays in the root list.
    - `→ ID` inside an item's requirement text is a cross-reference, not a status: audit the item on its own, and use evidence `→ ID` only when it fails solely because the target fails (e.g. CI-04 with no pipeline at all).
    - Area applies only in part → Applies `partial (reason)`, then mark the items that do not apply `n/a (reason)`.
-5. **Reuse:** before building an item, check whether a previous app already solved it and copy that implementation.
-6. **Changing an existing app** (improve a screen, add a feature): follow `areas/spec-flow.md` — a short spec + slices, acceptance by item IDs; no full launch pass.
+5. **Fix plan (after the audit, before code):** run `status.py` and plan from its root list, not from the blocked one. Order: the safety net first (SCF-13: OBS-01, OBS-03, DB-03, SEC-07, CI-06), then L1 items that can lose data or money (SEC, DB, BIL, LGL), then the rest. Items that need the user (account, credential, host access, decision) go to `## Needs user` with what each one blocks, not into code slices. Every safety-net item is either in the plan or in `## Needs user`; never silently left out.
+6. **Reuse:** before building an item, check whether a previous app already solved it and copy that implementation.
+7. **Changing an existing app** (improve a screen, add a feature): follow `areas/spec-flow.md` — a short spec + slices, acceptance by item IDs; no full launch pass.
 
 Levels: **L1** launch blocker · **L2** within 30 days of launch · **L3** when scale or an enterprise customer requires it.
 
