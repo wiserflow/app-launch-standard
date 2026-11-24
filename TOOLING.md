@@ -96,6 +96,7 @@ Skip: 21st.dev Magic MCP (pulls components outside the design system, third-part
 | Postgres tuning | Postgres MCP Pro | `uvx postgres-mcp --access-mode=restricted` | Index tuning, EXPLAIN, health; releases slow |
 | CI security | Sentry `gha-security-review` | `claude plugin marketplace add getsentry/skills` | Actions security review |
 | CI hardening | github-actions-hardening | `npx skills add github/awesome-copilot@github-actions-hardening` | |
+| CI templates | `templates/github-actions/` | copy to `.github/workflows/` | CI + staging/prod deploy base (CI-03..19) |
 | GitHub | `gh` CLI | — | GitHub MCP is redundant; if used: fine-grained PAT for one repo, read-only toolsets |
 
 Do not use: archived `modelcontextprotocol` postgres server, Hetzner community MCPs (stale → use `hcloud` CLI), Kubernetes/AWS/Supabase/Neon MCPs unless the stack uses them.

@@ -36,7 +36,7 @@ Change flags per app (`--frontend tanstack-start`, `native-uniwind` for Expo, `f
 | `packages/ui` / registry | Theme (`@theme` tokens) + components + blocks from the private shadcn registry | DES-02, DES-06, DES-16 |
 | Root files | `DESIGN.md`, `PRODUCT.md`, `CLAUDE.md` (rule block + area index), `docs/launch/` (this standard), `docs/PENDING.md`, `.env.example` | DES-10, PRD-01, ENG-04 |
 | Dev env | `scripts/dev.sh` (`bun run up` / `bun run down`), per-app Redis, Docker Compose | — |
-| CI/CD | PR workflow, staging/prod deploy, backup + restore-check scripts, Renovate, actionlint/zizmor | CI, DB-03 |
+| CI/CD | PR workflow, staging/prod deploy (base: `templates/github-actions/`), backup + restore-check scripts, Renovate, actionlint/zizmor | CI, DB-03 |
 | Tests | Playwright setup with auth fixture, tenant-isolation test, axe check, visual baseline helper | TST-04, A11Y-01, DES-12 |
 
 ## Checklist

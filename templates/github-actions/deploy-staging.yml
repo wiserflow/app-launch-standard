@@ -1,0 +1,68 @@
+name: deploy-staging
+
+# Runs on the RESULT of CI, not on push, so a red commit never reaches staging.
+# Builds every image ONCE (tag sha-<commit>); deploy-prod.yml promotes these same images.
+# Third-party actions use major tags here; pin to SHA (CI-09) before production use.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+concurrency: { group: deploy-staging, cancel-in-progress: false }
+permissions: { contents: read, packages: write }
+
+env:
+  ORG: my-org # PLACEHOLDER: lowercase GitHub org/user
+  APP: my-app # PLACEHOLDER
+  # In workflow_run, github.sha is the branch tip, NOT the commit CI tested. Always use head_sha.
+  SHA: ${{ github.event.workflow_run.head_sha }}
+
+jobs:
+  build:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [server, web] # PLACEHOLDER: SERVICES
+    steps:
+      - uses: actions/checkout@v5
+        with: { ref: "${{ env.SHA }}" }
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.${{ matrix.service }} # PLACEHOLDER: your Dockerfile layout
+          push: true
+          tags: ghcr.io/${{ env.ORG }}/${{ env.APP }}-${{ matrix.service }}:sha-${{ env.SHA }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    timeout-minutes: 15 # a crash-looping service must not block the queue for 6h
+    steps:
+      - uses: actions/checkout@v5
+        with: { ref: "${{ env.SHA }}" }
+      # --- PLACEHOLDER: deploy mechanism (example: ssh + swarm/compose) ---
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.STAGING_KNOWN_HOSTS }}" > ~/.ssh/known_hosts # pinned host key, no TOFU
+      - name: Deploy
+        run: |
+          # Your script receives the image tag and updates every service to it.
+          ssh "${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}" "bash ~/deploy.sh sha-${{ env.SHA }}"
+      - name: Smoke test
+        run: |
+          sleep 20
+          curl -fsS --max-time 15 "${{ vars.STAGING_HEALTH_URL }}"

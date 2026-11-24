@@ -1,0 +1,87 @@
+name: deploy-prod
+
+# Production = PROMOTION of an image already built and validated on staging. Nothing is rebuilt.
+# Trigger: push a tag vX.Y.Z. Rollback: re-run via workflow_dispatch with the previous tag.
+# Third-party actions use major tags here; pin to SHA (CI-09) before production use.
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (e.g. v1.4.0). Rollback = previous tag."
+        required: true
+
+concurrency: { group: deploy-prod, cancel-in-progress: false }
+permissions: { contents: read, packages: read }
+
+env:
+  ORG: my-org # PLACEHOLDER: lowercase GitHub org/user
+  APP: my-app # PLACEHOLDER
+  SERVICES: "server web" # PLACEHOLDER: space-separated, same as the staging matrix
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+    steps:
+      - name: Validate tag format
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Tag '$TAG' is not vX.Y.Z"; exit 1; }
+      - uses: actions/checkout@v5
+        with: { ref: "${{ env.TAG }}" }
+      - name: Resolve tag to commit
+        id: resolve
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Gate - staging image exists for every service
+        env: { SHA: "${{ steps.resolve.outputs.sha }}" }
+        run: |
+          for svc in $SERVICES; do
+            ref="ghcr.io/${ORG}/${APP}-${svc}:sha-${SHA}"
+            docker buildx imagetools inspect "$ref" > /dev/null \
+              || { echo "ERROR: $ref not found. This commit was never built by deploy-staging."; exit 1; }
+          done
+
+  deploy:
+    needs: gate
+    runs-on: ubuntu-latest
+    environment: production # required reviewers = approval gate (CI-12); nothing moves before approval
+    permissions: { contents: read, packages: write }
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with: { ref: "${{ env.TAG }}" }
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Promote (retag by manifest copy, no rebuild)
+        env: { SHA: "${{ needs.gate.outputs.sha }}" }
+        run: |
+          for svc in $SERVICES; do
+            img="ghcr.io/${ORG}/${APP}-${svc}"
+            docker buildx imagetools create -t "${img}:${TAG}" -t "${img}:prod" "${img}:sha-${SHA}"
+          done
+      # --- PLACEHOLDER: deploy mechanism (example: ssh + swarm/compose) ---
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.PROD_KNOWN_HOSTS }}" > ~/.ssh/known_hosts # pinned host key, no TOFU
+      - name: Deploy
+        run: ssh "${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }}" "bash ~/deploy.sh ${{ env.TAG }}" # TAG validated as vX.Y.Z in gate
+      - name: Smoke test
+        run: |
+          sleep 20
+          curl -fsS --max-time 15 "${{ vars.PROD_HEALTH_URL }}"

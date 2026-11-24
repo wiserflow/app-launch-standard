@@ -7,13 +7,14 @@ compatibility: Any agent that supports Agent Skills; tool install commands in TO
 
 # App Launch Standard
 
-Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 771 items (467 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
+Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 775 items (471 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
 
 | File | Content |
 | --- | --- |
 | `SKILL.md` (this) | Kickoff, how to use, global map, pointer to the runbook |
 | `RUNBOOK.md` | Launch runbook (T-14 to T+30) and operating cadence after launch |
 | `scripts/` | `init.py` (copy the kit into the app repo, create `STATUS.md`), `status.py` (progress report) |
+| `templates/github-actions/` | Reference CI/CD workflows (checks, staging build-once, prod promote-by-retag) implementing CI-16..CI-19 — copy and fill placeholders |
 | `areas/*.md` | One checklist per area — read only the areas in play |
 | `TOOLING.md` | Skills and MCP servers per area and per phase, install commands, security caveats |
 | `REFERENCES.md` | Reference repositories (boilerplates, checklists, OSS tools) |
@@ -105,7 +106,7 @@ Phases are an order of attack, not a waterfall: L1 items of every applicable are
 | 3. Harden | Testing and reliability | TST, REL | `areas/testing.md` | always | 15 (10) |
 | 3. Harden | Database | DB | `areas/database.md` | always | 12 (7) |
 | 3. Harden | Infrastructure | INF | `areas/infra.md` | self-hosted | 13 (8) |
-| 3. Harden | CI/CD | CI | `areas/cicd.md` | always | 15 (8) |
+| 3. Harden | CI/CD | CI | `areas/cicd.md` | always | 19 (12) |
 | 4. Launch | Observability, alerting, status | OBS, OPS | `areas/observability.md` | always | 17 (9) |
 | 4. Launch | Product analytics and metrics | ANL | `areas/analytics.md` | always | 6 (2) |
 | 4. Launch | Support and communication | SUP | `areas/support.md` | always | 13 (5) |
