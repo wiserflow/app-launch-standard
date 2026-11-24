@@ -9,16 +9,51 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 
 | File | Content |
 | --- | --- |
-| `SKILL.md` (this) | How to use, global map, launch runbook, operating cadence |
+| `SKILL.md` (this) | Kickoff, how to use, global map, pointer to the runbook |
+| `RUNBOOK.md` | Launch runbook (T-14 to T+30) and operating cadence after launch |
+| `scripts/` | `init.py` (copy the kit into the app repo, create `STATUS.md`), `status.py` (progress report) |
 | `areas/*.md` | One checklist per area — read only the areas in play |
 | `TOOLING.md` | Skills and MCP servers per area and per phase, install commands, security caveats |
 | `REFERENCES.md` | Reference repositories (boilerplates, checklists, OSS tools) |
+
+## Start here — ask first
+
+**Before reading any area or changing anything, ask the user a short kickoff in ONE message** (max 8 questions, each with a suggested default the user can accept with "ok"). Exception: if `docs/launch/STATUS.md` already has the answers in its `## Kickoff` block, read it and confirm in one line instead of asking again.
+
+1. **Track:** new app (greenfield) or already running in production (brownfield)? Default: brownfield if a repo with code exists.
+2. **Goal now:** full launch audit / prepare a launch / improve one part (→ ask which part, then `areas/spec-flow.md`) / review the UX of a screen? Default: full launch audit.
+3. **Paid product?** Billing model (subscription, usage, one-off, free). Default: free.
+4. **Audience:** B2B (organizations, members, roles), B2C, or both? Default: B2C.
+5. **Surfaces:** web, PWA, iOS, Android, desktop, CLI, extension, bot, API/MCP, other (→ `areas/platforms.md`). Default: web only.
+6. **Languages and countries served:** drives i18n, privacy law, payment methods. Default: one language, one country.
+7. **Stack:** already chosen? Record it; never impose the default stack on a brownfield app. Default: keep what exists.
+8. **Biggest pain right now and deadline.** No default.
+
+**Small "improve X" request:** ask only 1, 2 and 8, plus at most 2 questions specific to X, then go to `areas/spec-flow.md`.
+
+**Answers → scope.** Mark these areas `n/a (reason)` in `STATUS.md` (check the "Applies when" column of the Global map; n/a areas are kept, not deleted):
+
+| Answer | In scope / n/a |
+| --- | --- |
+| Not paid | BIL n/a |
+| B2C only | ORG mostly n/a (keep the items about a single-user account); CRM/GRW n/a unless sales-led |
+| Web only | MOB n/a; PLAT per-target sections n/a (keep the 19 general PLAT items) |
+| Non-web surfaces | PLAT target sections for each chosen surface in scope; MOB if native app or PWA |
+| No LLM in the product | AI n/a |
+| No messaging channel | MSG n/a |
+| No public API, SDK or webhooks | DOC n/a; ADM-06, ADM-07 n/a |
+| Managed hosting only (no self-hosting) | INF n/a |
+| Single language and country | I18N-07+ and extra payment methods deferred; keep I18N-01..06 |
+
+**Then:** record the answers in the `## Kickoff` block of `docs/launch/STATUS.md` (so the next session does not re-ask), show a **5-line plan**, and **wait for "go" before editing code.**
 
 ## How to use
 
 1. **Kickoff — pick the track** (`areas/scaffold.md`):
    - **Greenfield** (new app): create the repo from the starter, then copy this folder to `<repo>/docs/launch/`.
    - **Brownfield** (app already running): never regenerate the base over it. Copy this folder to `<repo>/docs/launch/` and follow *Brownfield adoption* in `areas/scaffold.md` (gap audit → safety net → kit one package at a time).
+
+   `scripts/init.py` does the copy and creates `STATUS.md`; `scripts/status.py` reports progress.
 
    Then go through the global map and mark each area `applies` / `n/a (reason)` in `docs/launch/STATUS.md` — n/a areas are not deleted, so the decision is visible.
 2. **Per phase:** before starting a phase, the agent reads only that phase's area files and installs that phase's tools from `TOOLING.md` (ask the user first; project scope).
@@ -94,46 +129,7 @@ Phases are an order of attack, not a waterfall: L1 items of every applicable are
 | Business rules and change flow | DOM-*, SPEC-*, PRD-*, ARC-* |
 | Reuse across apps | SCF-*, DES-16, ENG-04 |
 
-## Launch runbook
+## Launch runbook and operating cadence
 
-**T-14 days**
-
-- [ ] All L1 items checked with evidence
-- [ ] DES gates green: `design.md lint`, Tailwind lint, `impeccable detect`, visual baselines, axe
-- [ ] Legal texts published after lawyer review
-- [ ] DMARC at `quarantine`; EML-09 inbox test done
-- [ ] PERF-B8 load test and SEC-10 scan done on staging
-- [ ] INF-03 external port scan clean; DB-03 restore test passed; CI-06 rollback rehearsed
-
-**T-1 day**
-
-- [ ] Billing in live mode: real purchase + refund
-- [ ] Production error reaches error tracker with correct release
-- [ ] Alerts reach phone (OPS-03)
-- [ ] Status page up
-- [ ] New features behind flags where risky
-
-**Launch day**
-
-- [ ] End-to-end signup in incognito, phone and desktop
-- [ ] Watch errors, 5xx, queue depth, Web Vitals and funnel for 2 h
-- [ ] Announce: waitlist email, social, communities
-
-**T+7 / T+30**
-
-- [ ] Review activation funnel; tune EML-O1..O3
-- [ ] Read every ticket/feedback; top 3 become tasks
-- [ ] First NPS (T+30)
-- [ ] Launch retrospective in `docs/decisions/`
-
-## Operating cadence after launch
-
-| Cadence | Activity |
-| --- | --- |
-| Daily | New errors, open alerts, support queue |
-| Weekly | Signups, activation, MRR, churn; slow queries; changelog |
-| Monthly | Email metrics (open/click/unsubscribe/complaint), NPS, infra cost, dependency updates, Web Vitals trend |
-| Quarterly | Restore test, access review (who has admin), privacy review, secret rotation |
-| Twice a year | DR rehearsal, terms review, pentest if enterprise customers |
-
----
+Read `RUNBOOK.md` from T-14 days before launch (T-14 / T-1 / launch day / T+7 / T+30 checklists).
+Read it again after launch for the operating cadence (daily / weekly / monthly / quarterly).

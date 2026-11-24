@@ -30,10 +30,12 @@ Without the skill CLI, copy this folder into your repo (e.g. `docs/launch/`) and
 
 | File | Content |
 | --- | --- |
-| `SKILL.md` | Entry point: how to use, global map of areas, launch runbook, operating cadence |
+| `SKILL.md` | Entry point: kickoff questions, how to use, global map of areas |
+| `RUNBOOK.md` | Launch runbook and operating cadence after launch |
 | `areas/*.md` | One checklist per area — agents read only the areas in play |
 | `TOOLING.md` | Skills and MCP servers per area and phase |
 | `REFERENCES.md` | Reference repositories (boilerplates, checklists, OSS tools) |
+| `scripts/` | `init.py` copies the kit into your repo and creates `docs/launch/STATUS.md`; `status.py` reports progress (Python 3, stdlib only) |
 
 ## Contributing
 

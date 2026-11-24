@@ -70,7 +70,7 @@ How much of the kit fits depends on the stack: same house stack (Hono + Drizzle 
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| SCF-10 | 1 | Gap audit: every item of each applicable area marked in `docs/launch/STATUS.md` as `ok (evidence)` / `missing` / `diverges (ADR link)`; `missing` L1 items become tasks citing their IDs |
+| SCF-10 | 1 | Gap audit: every item of each applicable area marked in `docs/launch/STATUS.md` (`scripts/init.py`, `scripts/status.py`) as `ok (evidence)` / `missing` / `diverges (ADR link)`; `missing` L1 items become tasks citing their IDs |
 | SCF-11 | 1 | Stack diff vs house stack recorded in `docs/decisions/` (ADR): what stays, what converges, what never will and why |
 | SCF-12 | 1 | Kit adopted one package per PR, behind a flag where it changes runtime behavior, with a rollback path; the affected journey has a smoke/e2e test **before** the swap; schema changes are additive first (expand → migrate → contract) |
 | SCF-13 | 1 | Safety net before any kit adoption: OBS-01 error tracking, OBS-03 health checks, DB-03 backup with restore tested, SEC-07 secrets out of the repo, CI-06 rollback command |
