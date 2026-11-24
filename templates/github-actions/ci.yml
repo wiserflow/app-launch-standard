@@ -1,0 +1,70 @@
+name: CI
+
+# Checks only. This workflow never pushes an image (images are built in deploy-staging.yml).
+# Third-party actions use major tags here; pin to SHA (CI-09) before production use.
+on:
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**']
+  push:
+    paths-ignore: ['**.md', 'docs/**']
+    # CAUTION: if these checks are REQUIRED on a protected branch, a run skipped by
+    # paths-ignore stays "pending" and blocks the merge. Either do not make them required
+    # or drop paths-ignore and filter inside the job instead.
+
+concurrency: { group: "ci-${{ github.ref }}", cancel-in-progress: true }
+permissions: { contents: read }
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      # --- REPLACE WITH YOUR STACK (runtime, cache, frozen-lockfile install) ---
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/cache@v5
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+      - run: bun install --frozen-lockfile
+      # --- checks (replace commands with your scripts) ---
+      - run: bun run typecheck
+      - run: bun run lint
+      - run: bun run test # unit tests
+      - run: bun run db:check # migration check (e.g. drizzle-kit check / alembic heads)
+      - run: bun audit # dependency audit
+
+  # Optional: verify the image still builds when Dockerfile or lockfile change. Never pushes.
+  docker-changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions: { contents: read, pull-requests: read }
+    outputs:
+      changed: ${{ steps.filter.outputs.docker }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docker:
+              - 'docker/**'
+              - 'bun.lock'
+
+  docker-build:
+    needs: docker-changes
+    if: needs.docker-changes.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [server, web] # PLACEHOLDER: SERVICES (same list as deploy-staging.yml)
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.${{ matrix.service }} # PLACEHOLDER: your Dockerfile layout
+          push: false
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
