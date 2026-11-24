@@ -1,0 +1,15 @@
+# Cost and unit economics (FIN)
+
+| ID | L | Requirement |
+| --- | --- | --- |
+| FIN-01 | 1 | Every paid provider (cloud, LLM, messaging, SMS, email) has a billing alert and a hard cap or budget |
+| FIN-02 | 1 | LLM keys per environment; provider-side monthly limit + app-side per-tenant daily cap that **fails closed** (AI-02) |
+| FIN-03 | 1 | Every LLM / messaging / SMS call logged with `tenant_id`, model/units and cost |
+| FIN-04 | 1 | Unit economics known: cost per active tenant vs plan price; margin positive on the cheapest plan |
+| FIN-05 | 2 | Per-tenant cost dashboard (infra share + variable) with top-10 tenants by cost |
+| FIN-06 | 2 | Anomaly alert when spend > 2× the 7-day average, per provider and per tenant |
+| FIN-07 | 2 | Plan limits (messages, seats, storage, AI credits) enforced in code, not only on the pricing page (BIL-01) |
+| FIN-08 | 2 | TTL/retention on logs, object storage and Redis; unused volumes and snapshots swept monthly |
+| FIN-09 | 3 | Resources tagged (env/service/tenant), automated showback; cheaper-model routing for simple tasks; commitment discounts reviewed |
+
+References: [FinOps framework](https://www.finops.org/framework/) · [FinOps for AI](https://www.finops.org/wg/finops-for-ai-overview/) · [LiteLLM budgets](https://docs.litellm.ai/docs/proxy/users) · [Langfuse cost tracking](https://docs.langfuse.com/docs/observability/features/token-and-cost-tracking).
