@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Copy the App Launch Standard into the current repo and create docs/launch/STATUS.md.
+
+Run from the root of the app repo:  python3 /path/to/skill/scripts/init.py
+"""
+import argparse
+import re
+import shutil
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+FILES = ["SKILL.md", "RUNBOOK.md", "TOOLING.md", "REFERENCES.md"]
+QUESTIONS = [
+    "Track: greenfield (new app) or brownfield (already in production)?",
+    "Goal now: full launch audit / prepare a launch / improve one part / review a screen's UX?",
+    "Paid product? Billing model?",
+    "Audience: B2B (orgs, members, roles), B2C, or both?",
+    "Target surfaces (web, PWA, iOS, Android, desktop, CLI, extension, bot, API/MCP)?",
+    "Languages and countries served?",
+    "Stack already chosen?",
+    "Biggest pain right now and deadline?",
+]
+HEADING = re.compile(r"^#\s+.*\(([^)]+)\)\s*$")
+ITEM = re.compile(r"^\|\s*([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)\s*\|\s*([123])\s*\|")
+
+
+def parse_area(path):
+    """Return (prefix, [(id, level), ...]) for one area file."""
+    prefix, items = "", []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not prefix:
+            m = HEADING.match(line)
+            if m:
+                prefix = m.group(1).strip()
+        m = ITEM.match(line)
+        if m:
+            items.append((m.group(1), m.group(2)))
+    return prefix, items
+
+
+def build_status(areas_dir):
+    areas = [(p, *parse_area(p)) for p in sorted(areas_dir.glob("*.md"))]
+    out = ["# Launch status", "", "## Kickoff", "",
+           "Answer once; the agent reads this instead of asking again.", "",
+           "| # | Question | Answer |", "| --- | --- | --- |"]
+    out += [f"| {i} | {q} |  |" for i, q in enumerate(QUESTIONS, 1)]
+    out += ["", "## Areas", "",
+            "| Area file | Prefix | Applies (yes/no) | Reason |", "| --- | --- | --- | --- |"]
+    out += [f"| `areas/{p.name}` | {pre} | yes |  |" for p, pre, _ in areas]
+    out += ["", "## Items", "",
+            "Status: `todo` / `ok` / `missing` / `diverges` / `n/a`. Evidence: test name, screenshot path, URL, ADR link.", ""]
+    for p, pre, items in areas:
+        out += [f"### {pre} (`areas/{p.name}`)", "", "| ID | L | Status | Evidence |", "| --- | --- | --- | --- |"]
+        out += [f"| {i} | {lv} | todo |  |" for i, lv in items]
+        out.append("")
+    return "\n".join(out)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--target", default="docs/launch", help="target dir, relative to the current directory (default: docs/launch)")
+    ap.add_argument("--force", action="store_true", help="overwrite existing copied files (STATUS.md is never overwritten)")
+    args = ap.parse_args()
+
+    target = Path.cwd() / args.target
+    if target.exists() and any(target.iterdir()) and not args.force:
+        print(f"error: {target} already exists and is not empty; use --force to refresh the copies (STATUS.md is kept)", file=sys.stderr)
+        return 1
+    target.mkdir(parents=True, exist_ok=True)
+    for name in FILES:
+        shutil.copy2(ROOT / name, target / name)
+    shutil.copytree(ROOT / "areas", target / "areas", dirs_exist_ok=True)
+
+    status = target / "STATUS.md"
+    if status.exists():
+        print(f"kept existing {status}")
+    else:
+        status.write_text(build_status(ROOT / "areas"), encoding="utf-8")
+        print(f"created {status}")
+    print(f"\nCopied the standard into {target}\n\nNext steps:\n"
+          f"  1. Ask the agent to follow {args.target}/SKILL.md (it asks the kickoff questions first).\n"
+          f"  2. Answers go in the Kickoff block of {args.target}/STATUS.md; set Applies=no (with a reason) for n/a areas.\n"
+          f"  3. Mark items ok / missing / diverges / n/a with evidence.\n"
+          f"  4. Report progress: python3 {ROOT / 'scripts' / 'status.py'} --file {args.target}/STATUS.md")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
