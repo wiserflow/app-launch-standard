@@ -2,6 +2,8 @@
 
 Turns "I want to improve X in my app" into a short spec, a few slices and a verified result. The acceptance criteria are item IDs from this standard, so you don't rewrite them for every change. It is NOT product discovery or the launch PRD (`product.md`, PRD), the business rules register (`domain.md`, DOM), or the UX rules themselves (`ux-patterns.md`, UXP). It is the lightweight path that applies them to one change, in a brownfield app first.
 
+Applicability: this file governs HOW changes are made, not what the app must be. During a pure audit (Kickoff goal = audit) mark SPEC-* n/a with that reason; it applies once changes start.
+
 ## Size rule (decide before step 1)
 
 | Size | Signal | Artifacts |

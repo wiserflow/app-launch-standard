@@ -2,7 +2,7 @@
 
 Goal: a rulebook an agent follows screen by screen and a reviewer checks with a screenshot — how screens are laid out, behave and talk, with numbers instead of adjectives. It is NOT the token/component source (`design.md`, DES), the WCAG baseline (`accessibility.md`, A11Y), first-run activation (`onboarding.md`, ONB), speed budgets (`performance.md`, PERF) or the shell — sidebar, user menu, org switcher, global search, breadcrumbs (`app-shell.md`, SHL).
 
-How to use: **building** → apply the section's decision table, then its checklist. **Reviewing** → run the [Screen review protocol](#screen-review-protocol-2-minutes-per-screen). Numbers are defaults: an app may override one in `DESIGN.md`, and then that number rules every screen. A deviation not written there is a bug.
+How to use: **building** → apply the section's decision table, then its checklist. **Reviewing** → run the [Screen review protocol](#screen-review-protocol-2-minutes-per-screen). Numbers are defaults: an app may override one in `DESIGN.md`, and then that number rules every screen. A deviation not written there is a bug. A valid override is a number or token in `DESIGN.md` (the design-system doc), applied app-wide; a distinctive design world is fine when written there. **Proof for screen-by-screen rules:** the Screen review protocol screenshots over the core screens listed in the PRD (computed styles or a screenshot count for numeric limits); an "every screen" rule is ok when every sampled screen passes. Team-only rows are marked "(team accounts only)" and are n/a for one-person-per-account apps (kickoff question: one person per account or team accounts).
 
 ## Layout and spacing (UXP-L)
 
@@ -13,7 +13,7 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-L3 | 1 | Width caps: running text 45–75 characters per line (~65ch); forms 480–640 px; app content ≤ 1440 px (not stretched at 1920); only tables, boards and canvases go full width |
 | UXP-L4 | 1 | Same page header anatomy everywhere: h1 title top-left, at most 1 primary action top-right, optional one-line description under the title, then content (shell → DES-07) |
 | UXP-L5 | 1 | Max 3 radius values (e.g. 6 px controls, 8–12 px cards and dialogs, full for pills/avatars), nested radius = outer − padding; max 3 elevation levels (flat, raised, overlay); a surface is separated by border OR shadow OR background, one per component; no card inside card |
-| UXP-L6 | 1 | Color budget: neutrals ≥ 80% of the screen; the accent color only on the primary action, links and selected state; red/amber/green/blue only for status and always with icon or text (→ A11Y-03) |
+| UXP-L6 | 1 | Color budget: neutrals ≥ 80% of the screen (estimated on the screenshot); the accent color only on the primary action, links and selected state; red/amber/green/blue only for status and always with icon or text (→ A11Y-03) |
 | UXP-L7 | 2 | Page padding 16 px below 640, 24 px at 640–1023, 32 px from 1024; control height 36–40 px desktop and 44–48 px touch; all controls on one row share one height |
 
 ## Typography and hierarchy (UXP-T)
@@ -21,7 +21,7 @@ How to use: **building** → apply the section's decision table, then its checkl
 | ID | L | Requirement |
 | --- | --- | --- |
 | UXP-T1 | 1 | Per screen: ≤ 4 font sizes, ≤ 2 weights (400 + 500/600), ≤ 3 text colors (primary, secondary, muted), all from the scale (→ DES-04); body 14–16 px, nothing below 12 px; line-height 1.5 body, 1.2–1.3 headings |
-| UXP-T2 | 1 | One focal point: blur the screenshot 8 px (squint test) and the page title and the primary action are still the 2 most prominent things; hierarchy is built with weight and color before size |
+| UXP-T2 | 1 | One focal point (proof: screenshot review): blur the screenshot 8 px (squint test) and the page title and the primary action are still the 2 most prominent things; hierarchy is built with weight and color before size |
 | UXP-T3 | 1 | One h1 per page, equal to the nav label and the `<title>` (→ UX-04); heading levels not skipped |
 | UXP-T4 | 1 | Overflow is designed: single-line truncation with ellipsis and the full value on hover/focus; verified with a 60-char name, an 80-char email and a 12-digit number — no overlap, no wrap that breaks the row, no clipped text |
 | UXP-T5 | 1 | Icons: one set (→ DES-07), sizes 16/20/24 only, one stroke weight; no emoji as icons; icon-only buttons limited to universal icons (close, search, more, back, copy) and always with a tooltip (→ A11Y-05) |
@@ -47,10 +47,10 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-F1 | 1 | Single column, one field per row; side by side only for short related pairs (city/state, expiry/CVC); field width hints at the expected length |
 | UXP-F2 | 1 | Label always visible above the field; a placeholder never replaces the label and holds only an example format; help needed to fill the field is text under it, not a tooltip (field pattern → DES-07) |
 | UXP-F3 | 1 | Only fields the task needs now; optional ones marked "(optional)" instead of asterisks on required; nothing derivable is asked (country from locale, name from the invite); the most common choice is pre-selected |
-| UXP-F4 | 1 | Control chosen by the table above |
-| UXP-F5 | 1 | Correct `type`, `inputmode` and `autocomplete` on every input (email, tel, numeric, one-time-code, new-password) so the right mobile keyboard and password manager appear (→ A11Y-07); input is forgiving — trims spaces, accepts pasted formatted values (phone with spaces, decimal comma or point) and normalizes them itself (masks → UX-03) |
+| UXP-F4 | 1 | Control chosen by the control table at the top of this section |
+| UXP-F5 | 1 | Correct `type`, `inputmode` and `autocomplete` on every input (email, tel, numeric, one-time-code, new-password) so the right mobile keyboard and password manager appear (→ A11Y-07; proof: lint rule or grep of the input components, or a pass over the PRD core flows); input is forgiving — trims spaces, accepts pasted formatted values (phone with spaces, decimal comma or point) and normalizes them itself (masks → UX-03) |
 | UXP-F6 | 1 | Keyboard: Tab order = visual order; Enter submits single-line forms; Ctrl/⌘+Enter submits forms with a textarea; first field autofocused on desktop in dedicated form pages and dialogs |
-| UXP-F7 | 1 | One save model per form: explicit (Save + Cancel visible without scrolling — sticky footer on long forms) or autosave (with status → UXP-K5); never both in one form |
+| UXP-F7 | 1 | One save model per form: explicit (Save + Cancel visible without scrolling — sticky footer on long forms) or autosave (with status → UXP-K5); never both in one form (settings pages → UXP-A2) |
 | UXP-F8 | 1 | A dirty form is protected: leaving or closing asks "Discard changes?"; typed input survives a failed submit, a session expiry and Back/Forward |
 | UXP-F9 | 2 | More than 8 fields → titled sections of ≤ 7 fields; more than 2 viewports or branching logic → multi-step with "Step 2 of 4", each step a URL, Back keeps data, review summary before the final submit |
 | UXP-F10 | 2 | File upload: click and drag-and-drop; accepted types and max size stated before picking; per-file progress, cancel and retry; file name or preview plus remove after upload |
@@ -69,11 +69,12 @@ How to use: **building** → apply the section's decision table, then its checkl
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-B1 | 1 | Exactly 1 primary (filled accent) button per view, dialog or card; the rest secondary (outline), ghost or link; ≤ 4 variants and ≤ 3 sizes in the whole app |
+| UXP-B1 | 1 | Exactly 1 primary (filled accent) button per view, dialog or card; the rest secondary (outline), ghost or link; ≤ 4 button variants and ≤ 3 button sizes in the whole app (icon sizes → UXP-T5) |
 | UXP-B2 | 1 | Label = verb + object naming the outcome ("Create invoice", "Send invite"); never "OK", "Submit", "Yes", "Confirm" or "Click here" |
 | UXP-B3 | 1 | Placement fixed app-wide: page primary action top-right of the header; forms on a page → actions left-aligned under the fields, primary first; dialogs → actions right-aligned, primary rightmost with Cancel to its left |
 | UXP-B4 | 1 | Pending: the button shows a spinner, keeps its width and blocks re-click; double-click or Enter-spam creates exactly 1 record |
-| UXP-B5 | 1 | No unexplained disabled control: tooltip or adjacent text gives the reason and the fix; an action the role can never perform is hidden (settings are the exception → UXP-A5); plan-gated → visible with lock and plan name (→ BIL-01) |
+| UXP-B5 | 1 | No unexplained disabled control: tooltip or adjacent text gives the reason and the fix; an action the role can never perform is hidden (team accounts only; settings are the exception → UXP-A5) |
+| UXP-B9 | 2 | Plan-gated action → visible with lock and plan name (→ BIL-01) |
 | UXP-B6 | 1 | Links navigate, buttons act: whatever goes to a URL is a real `<a>` (Ctrl/⌘-click and middle-click open a new tab), including clickable rows and cards; whatever mutates is a `<button>` |
 | UXP-B7 | 1 | Every interactive element has visible default, hover, focus-visible, pressed and disabled states (→ DES-11) and reacts in < 100 ms; pointer cursor on clickable elements |
 | UXP-B8 | 2 | More than 3 actions on one object → 1–2 visible plus a "⋯" menu; menu items are icon + verb label; the destructive item is last, separated, in danger color |
@@ -93,7 +94,7 @@ How to use: **building** → apply the section's decision table, then its checkl
 | ID | L | Requirement |
 | --- | --- | --- |
 | UXP-D1 | 1 | Every destructive action is classified by the table; none runs on a single click with neither undo nor confirm |
-| UXP-D2 | 1 | Confirm dialog: title = question naming the object ("Delete project 'Apollo'?"); body = consequence and irreversibility in ≤ 2 sentences with counts ("and its 14 tasks"); buttons repeat the verb ("Delete project" / "Cancel"); never "Are you sure?" with "Yes" / "No" |
+| UXP-D2 | 1 | Confirm dialog: title = question naming the object ("Delete project 'Apollo'?"); body = consequence and irreversibility in ≤ 2 sentences with counts ("and its 14 tasks"); buttons repeat the verb ("Delete project" / "Cancel"); never "Are you sure?" with "Yes" / "No"; an inline confirm strip that meets the same rules (names the object, verb buttons, same focus and Esc behavior as UXP-D3) counts as a dialog |
 | UXP-D3 | 1 | In destructive dialogs the initial focus is on Cancel, Enter does not destroy, Esc cancels; the filled danger style appears only on that final button — triggers in rows, menus and toolbars are neutral or danger text |
 | UXP-D4 | 1 | Confirm dialogs are reserved for destructive, irreversible or costly actions: zero confirms on create, save, navigate or reversible actions (habituation kills the warning) |
 | UXP-D5 | 1 | After a delete the user lands on the parent list with the item gone and a toast — never on a 404, a stale detail page or a list still showing the item |
@@ -124,10 +125,10 @@ How to use: **building** → apply the section's decision table, then its checkl
 | --- | --- | --- |
 | UXP-K1 | 1 | Waits follow the thresholds table: a loader appears only after 300 ms and, once shown, stays ≥ 300 ms; skeletons mirror the final layout (→ PERF-F10); a full-screen blocking spinner exists only at app boot or auth redirect |
 | UXP-K2 | 1 | Refetch, sort, filter and pagination keep the current content on screen (dimmed or with a top progress bar); content is never swapped back to a skeleton or a blank area |
-| UXP-K3 | 1 | Every message uses the channel from the table (baseline → UX-02) |
+| UXP-K3 | 1 | Every message uses the channel from the table (baseline → UX-02); the Undo toast (UXP-D table) and the post-delete toast (UXP-D5) are allowed even though the result is visible |
 | UXP-K4 | 1 | Toasts: one fixed position, ≤ 3 stacked, ≤ 2 lines, ≤ 1 action, success auto-dismisses in 4–6 s, errors persist until dismissed, all dismissible, never the only copy of information needed later |
-| UXP-K5 | 1 | No silent outcome: with the network blocked every action ends in a visible error with Retry; autosave shows "Saving…" → "Saved" → "Couldn't save · Retry"; success names the object ("Invoice #1042 sent to ana@acme.com"), never bare "Success" or "Done" |
-| UXP-K6 | 1 | Current state is readable on a still screenshot: active nav item, current tab, selected rows, applied filters, toggled options |
+| UXP-K5 | 1 | No silent outcome: with the network blocked every action ends in a visible error with Retry; autosave shows "Saving…" → "Saved" → "Couldn't save · Retry"; success names the object ("Invoice #1042 sent to ana@acme.com"), never bare "Success" or "Done"; proof: automated check with the network blocked, or a manual pass recorded with screenshots |
+| UXP-K6 | 1 | Current state is readable on a still screenshot: active nav item, current tab, selected rows, applied filters, toggled options (proof: screenshots) |
 | UXP-K7 | 2 | Optimistic UI for cheap frequent actions (toggle, star, check off, rename, reorder): change visible in < 100 ms, rolled back with a message on failure (→ PERF-F9) |
 | UXP-K8 | 2 | Operations over 10 s run in the background (→ PERF-B7): progress or named steps, the user can navigate away, completion and failure are notified (→ SUP-04), cancel offered when feasible |
 
@@ -136,11 +137,12 @@ How to use: **building** → apply the section's decision table, then its checkl
 | ID | L | Requirement |
 | --- | --- | --- |
 | UXP-G1 | 1 | Container: table when comparing ≥ 3 attributes across rows, cards for visual or browsable objects; below 640 px a table becomes stacked rows with its 2–3 key fields or scrolls horizontally with a sticky first column — never squeezed columns |
-| UXP-G2 | 1 | Cells: text left; numbers and currency right with tabular figures and equal decimals; header aligned like its cells; empty value is "—" (never blank, "null" or mixed "N/A"); status is a badge with text; booleans are never "true/false"; one line per cell (→ UXP-T4) |
+| UXP-G2 | 1 | Cells: text left; numbers and currency right with tabular figures and equal decimals; header aligned like its cells; empty value is "—" (never blank, "null" or mixed "N/A"); status is a badge with text |
+| UXP-G10 | 2 | Cell details: numbers use tabular figures and equal decimals; booleans are never "true/false"; one line per cell (→ UXP-T4) |
 | UXP-G3 | 1 | First column is the object's name and links to its detail; the whole row is clickable with a hover state (→ UXP-B6); ≤ 7 columns at 1280 px, the rest lives in the detail view or a column picker |
-| UXP-G4 | 1 | Sorting: an intentional default (newest first for activity, A–Z for names); sortable headers show the direction arrow; sort runs server-side whenever the list is paginated |
+| UXP-G4 | 1 | Sorting: an intentional default (newest first for activity, A–Z for names); sortable headers show the direction arrow; sort runs server-side whenever the list is paginated (a small list loaded in full may sort client-side) |
 | UXP-G5 | 1 | Sort, filters, search, page and tab live in the URL: reload, share and Back reproduce the exact view; preferences (density, visible columns, collapsed panels) persist per user, not in the URL |
-| UXP-G6 | 1 | Pagination: tables → pages of 25/50/100 with "1–25 of 312" when the total is cheap to count, otherwise cursor "Previous / Next" without a total (API stays cursor-based → PERF-B2); feeds → "Load more" or infinite scroll with position restored on Back; a filtered list shows "12 of 312" (→ PERF-B2) |
+| UXP-G6 | 1 | Lists that can exceed 100 rows are paginated; a smaller list loaded in full needs no pagination but shows its total. Pagination: tables → pages of 25/50/100 with "1–25 of 312" when the total is cheap to count, otherwise cursor "Previous / Next" without a total (API stays cursor-based → PERF-B2); feeds → "Load more" or infinite scroll with position restored on Back; a filtered list shows "12 of 312" (→ PERF-B2) |
 | UXP-G7 | 2 | Bulk actions: checkbox column, Shift-click range, header checkbox selects the page and offers "Select all 312"; an action bar shows the count and the actions; destructive bulk → UXP-D table |
 | UXP-G8 | 2 | Row height 40–48 px (32–36 px in compact mode); header sticky when the table is taller than the viewport; row actions visible on hover AND focus and always visible on touch (→ UXP-B8) |
 | UXP-G9 | 3 | Where users live in the table: column show/hide/resize, saved views, density toggle, inline cell edit, CSV export of the current filtered view |
@@ -161,7 +163,8 @@ How to use: **building** → apply the section's decision table, then its checkl
 | --- | --- | --- |
 | UXP-O1 | 1 | Container picked by the table; the same kind of task uses the same container across the app |
 | UXP-O2 | 1 | Max overlay depth 1: no modal on modal, no drawer on drawer; the only allowed stack is a confirm dialog on top; a next step replaces the content or navigates |
-| UXP-O3 | 1 | Every dialog and drawer: title naming the task, visible close button, Esc and scrim click close (dirty form → UXP-F8), focus trapped then returned to the trigger, page behind does not scroll (→ A11Y-02); widths from a fixed set (dialog 400/560/720 px, drawer 400–640 px); height ≤ 90vh with the body scrolling and header + actions pinned |
+| UXP-O3 | 1 | Every dialog and drawer: title naming the task, visible close button, Esc and scrim click close (dirty form → UXP-F8), focus trapped then returned to the trigger, page behind does not scroll (→ A11Y-02); overlay sizes → UXP-O7 |
+| UXP-O7 | 2 | Overlay sizes: widths from a fixed set (dialog 400/560/720 px, drawer 400–640 px); height ≤ 90vh with the body scrolling and header + actions pinned |
 | UXP-O4 | 2 | An overlay showing an entity (record drawer, detail dialog) has a URL: Back closes it, reload reopens it, the link can be shared |
 | UXP-O5 | 2 | Tooltips: ≤ 1 sentence, non-essential, no interactive content, open after ~500 ms of hover and on keyboard focus; popovers and menus flip to stay inside the viewport, one open at a time |
 | UXP-O6 | 2 | No unsolicited overlay on load (what's new, survey, upsell) before the user completes a first action in the session; at most 1 per session (the ONB-05 first-visit tour is the only exception); feature announcements are a dot or dismissible callout next to the feature, gone forever once dismissed (→ SUP-03, ONB-05) |
@@ -181,8 +184,8 @@ How to use: **building** → apply the section's decision table, then its checkl
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-S1 | 1 | Any list that can exceed 25 items has a search field: results as you type (debounce 250–300 ms) or on Enter when the backend takes over 1 s; in-field spinner and a clear "×" (global search → `app-shell.md`) |
-| UXP-S2 | 1 | Applied filters are always visible as removable chips with "Clear all", and the result count updates with them |
+| UXP-S1 | 1 | Any list or grid that can exceed 25 items has a search field (or visible filters when items are browsed visually): results as you type (debounce 250–300 ms) or on Enter when the backend takes over 1 s; in-field spinner and a clear "×" (global search → `app-shell.md`) |
+| UXP-S2 | 1 | Where a list has filters, applied filters are always visible as removable chips with "Clear all", and the result count updates with them |
 | UXP-S3 | 2 | Search matches the fields users see (name, email, code), ignoring case, accents and outer spaces, with partial matches; ≤ 4 most-used filters visible above the list, the rest behind "Filters"; desktop applies instantly, the mobile filter sheet has a "Show N results" button |
 | UXP-S4 | 2 | Date-range filters offer presets (Today, Last 7 days, Last 30 days, This month, Custom) and display the resolved absolute range (→ I18N-02) |
 
@@ -203,11 +206,11 @@ How to use: **building** → apply the section's decision table, then its checkl
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-C1 | 1 | Voice: plain words, second person, active voice, present tense; one term per concept across the whole app, taken from the glossary (→ `domain.md`); one language per locale — no mixed-language screens |
+| UXP-C1 | 1 | Voice: plain words, second person, active voice, present tense; one term per concept across the whole app, taken from the glossary (→ `domain.md`; proof: grep for banned synonyms → DOM-03, plus sampled screenshots); one language per locale — no mixed-language screens |
 | UXP-C2 | 1 | Sentence case on every title, button, label and menu item; no final period on labels, buttons and headings; no "Oops", "Whoops", "Please note" or exclamation marks on errors |
 | UXP-C3 | 1 | Errors follow the formula; never on screen: status codes, stack traces, exception text, "Something went wrong" alone, `[object Object]`, i18n keys; unexpected errors show a short reference id for support |
-| UXP-C4 | 1 | No developer vocabulary on screen: `null`, `undefined`, `NaN`, "Invalid Date", enum constants (`PENDING_REVIEW`), column names, "entity", "payload", raw ISO timestamps; every enum has a human label; zero lorem ipsum, "TODO", "Test" or "John Doe" in production |
-| UXP-C5 | 1 | Verbs follow the vocabulary table: the same action has the same word on every screen (→ UXP-B2) |
+| UXP-C4 | 1 | No developer vocabulary on screen: `null`, `undefined`, `NaN`, "Invalid Date", enum constants (`PENDING_REVIEW`), column names, "entity", "payload", raw ISO timestamps; every enum has a human label; zero lorem ipsum, "TODO", "Test" or "John Doe" in production (proof: grep of UI source and enum label maps, plus sampled screenshots) |
+| UXP-C5 | 1 | Verbs follow the verb table in this section (Create/Add/Remove/Delete/Archive/Save/Cancel/Close), extended by the app's glossary (→ `domain.md`): the same action has the same word on every screen (→ UXP-B2) |
 | UXP-C6 | 2 | Dates: relative under 7 days ("5 min ago", "Yesterday 14:30"), absolute after ("12 Mar", year added when not the current one); exact timestamp with time zone on hover (→ I18N-02, UX-03); never an ambiguous all-numeric date |
 | UXP-C7 | 2 | Numbers: thousands separators, currency with symbol and fixed decimals (→ UX-03), unit always present, percentages with ≤ 1 decimal, tiles abbreviate (12.4k) with the exact value on hover, real plurals ("1 item", "2 items" — never "item(s)") |
 | UXP-C8 | 2 | Length budget: labels 1–3 words, buttons ≤ 3 words, headings ≤ 6 words, help text ≤ 1 sentence, dialog body ≤ 2 sentences; keyword first |
@@ -226,14 +229,14 @@ How to use: **building** → apply the section's decision table, then its checkl
 | --- | --- | --- |
 | UXP-M1 | 2 | Durations and easings follow the table and exist as tokens in `DESIGN.md`; with `prefers-reduced-motion` (→ A11Y-06) slides and scales become ≤ 150 ms fades or cuts while progress indicators keep working |
 | UXP-M2 | 2 | Only `transform` and `opacity` are animated (never width, height, top, left); animations are interruptible and never block input |
-| UXP-M3 | 1 | Motion explains something — origin (drawer from its edge, popover from its trigger), a state change or feedback; none of: decorative loops, parallax, bounce/elastic, staggered fade-in of the page on every navigation |
+| UXP-M3 | 1 | Motion explains something — origin (drawer from its edge, popover from its trigger), a state change or feedback; none of: decorative loops, parallax, bounce/elastic, staggered fade-in of the page on every navigation (proof: grep animation definitions, plus a recorded pass over the core flows) |
 | UXP-M4 | 2 | High-frequency and keyboard-driven actions (typing, row selection, command palette, tab switch) animate in ≤ 100 ms or not at all |
 
 ## Responsive and mobile (UXP-R)
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-R1 | 1 | One breakpoint set (e.g. 640 / 768 / 1024 / 1280), mobile-first; screens verified at 375, 768 and 1280 (→ DES-09, UX-01); no page-level horizontal scroll at any width from 320 px (→ A11Y-06) |
+| UXP-R1 | 1 | One breakpoint set (e.g. 640 / 768 / 1024 / 1280), mobile-first; screens verified at 375, 768 and 1280 (→ DES-09, UX-01; proof: screenshot set or automated viewport check); no page-level horizontal scroll at any width from 320 px (→ A11Y-06) |
 | UXP-R2 | 1 | Touch targets ≥ 44×44 px with ≥ 8 px between neighbours on touch layouts (the 24 px of A11Y-07 is the floor, not the target) |
 | UXP-R3 | 1 | Nothing is hover-only: row actions, tooltip content and menus are reachable by tap and by keyboard |
 | UXP-R4 | 1 | Mobile inputs have font-size ≥ 16 px (no iOS zoom on focus) and pinch-zoom is never disabled; full-height layouts use `100dvh`, respect safe-area insets, and neither the keyboard nor a fixed bar covers the focused field or the submit button |
@@ -247,7 +250,7 @@ Budgets and techniques live in PERF-F1, PERF-F9 and PERF-F10; these items are wh
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-P1 | 1 | Navigation reacts in < 100 ms: the nav item becomes active and the route's skeleton renders at once; never more than 300 ms frozen on the old page without feedback |
+| UXP-P1 | 1 | Navigation reacts in < 100 ms: the nav item becomes active and the route's skeleton renders at once; never more than 300 ms frozen on the old page without feedback (proof: trace timing or screen recording) |
 | UXP-P2 | 1 | The shell (sidebar, header) stays mounted across navigation — no full-page flash or re-render; only the content area changes |
 | UXP-P3 | 1 | No flash of wrong state on load: wrong theme, login page for a signed-in user, empty state before data arrives, unstyled or untranslated text, permission-gated UI that appears and then vanishes |
 | UXP-P4 | 1 | No layout shift from late content: space reserved for images, async sections, banners and loading buttons (CLS → PERF-F1) |
@@ -271,9 +274,9 @@ Budgets and techniques live in PERF-F1, PERF-F9 and PERF-F10; these items are wh
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-E1 | 1 | Every list, table, widget and detail view implements the applicable rows of the matrix, each with a story or screenshot (→ DES-09, ONB-04) |
+| UXP-E1 | 1 | Every list, table, widget and detail view implements the applicable rows of the matrix, each with a story, a screenshot or an e2e snapshot (→ DES-09, ONB-04) |
 | UXP-E2 | 1 | First use, no results and error are three different states with different copy and actions; an empty state renders only after the load has confirmed zero items |
-| UXP-E3 | 1 | Failure is scoped: sections load independently, a slow or failed one shows its own skeleton or error with Retry and never blanks the page; an app-level error boundary shows "Reload" + reference id inside the shell (→ SHL-31) — never a white screen |
+| UXP-E3 | 1 | Failure is scoped: sections load independently, a slow or failed one shows its own skeleton or error with Retry and never blanks the page; an app-level error boundary shows "Reload" + reference id inside the shell (→ SHL-31, mark this part blocked by it) — never a white screen |
 | UXP-E4 | 1 | 403 and 404 copy follows the matrix; rendering inside the shell → SHL-29, SHL-30; hidden vs disabled nav → SHL-33 |
 | UXP-E5 | 1 | Data extremes verified on every list and detail: 0, 1 and 1000+ items; longest strings (→ UXP-T4); missing optional fields; missing avatar → initials; text 30% longer for translation (→ `i18n.md`) |
 | UXP-E6 | 2 | Limits: usage visible before the wall ("4 of 5 projects", → BIL-10); at the limit the blocked action explains it and offers upgrade or cleanup; existing data stays accessible (→ FIN-07) |
@@ -296,9 +299,9 @@ Pattern only — what the personal and organization settings contain is `account
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-A1 | 1 | Settings split into named sections (≤ 7 per level): sub-nav on desktop, list → detail on mobile; each section has a URL; personal and organization settings are visibly separate groups |
+| UXP-A1 | 1 | Settings split into named sections (≤ 7 per level): sub-nav on desktop, list → detail on mobile; each section has a URL; personal and organization settings are visibly separate groups (team accounts only) |
 | UXP-A2 | 1 | Save model by control: independent toggles and selects autosave with inline "Saved"; text fields and related groups get a Save button per section card — never one Save for the whole page, never both models in one card (→ UXP-F7) |
-| UXP-A3 | 1 | Each setting has a label and a one-line plain description of its effect and scope ("Applies to all members"); the current value is readable without opening anything; delayed effects are stated ("From the next billing cycle") |
+| UXP-A3 | 1 | Each setting has a label and a one-line plain description of its effect and scope (team accounts only: "Applies to all members"); the current value is readable without opening anything; delayed effects are stated ("From the next billing cycle") |
 | UXP-A4 | 1 | Danger zone: destructive settings sit in a last, separate, danger-bordered section, each with its consequence text, following the UXP-D table (→ LGL-04) |
 | UXP-A5 | 2 | Settings locked by role or plan are shown read-only with the reason ("Only owners can change this", plan badge) instead of hidden (→ `organization.md`, BIL-01) |
 | UXP-A6 | 2 | Secrets (API keys, tokens): full value shown once with a copy button, afterwards masked showing the last 4 characters; rotate and revoke go through a confirm (→ UXP-D table) |

@@ -7,7 +7,7 @@ compatibility: Any agent that supports Agent Skills; tool install commands in TO
 
 # App Launch Standard
 
-Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 775 items (469 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
+Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 788 items (469 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
 
 | File | Content |
 | --- | --- |
@@ -26,7 +26,7 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 1. **Track:** new app (greenfield) or already running in production (brownfield)? Default: brownfield if a repo with code exists.
 2. **Goal now:** full launch audit / prepare a launch / improve one part (→ ask which part, then `areas/spec-flow.md`) / review the UX of a screen? Default: full launch audit.
 3. **Paid product?** Billing model (subscription, usage, one-off, free). Default: free.
-4. **Audience:** B2B (organizations, members, roles), B2C, or both? Default: B2C.
+4. **Accounts:** one person per account, team accounts (a company or studio with members and roles), or both? Default: one person per account.
 5. **Surfaces:** web, PWA, iOS, Android, desktop, CLI, extension, bot, API/MCP, other (→ `areas/platforms.md`). Default: web only.
 6. **Languages and countries served:** drives i18n, privacy law, payment methods. Default: one language, one country.
 7. **Stack:** already chosen? Record it; never impose the default stack on a brownfield app. Default: keep what exists.
@@ -39,10 +39,11 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 | Answer | In scope / n/a |
 | --- | --- |
 | Not paid | BIL n/a |
-| B2C only | ORG mostly n/a (keep the items about a single-user account); CRM/GRW n/a unless sales-led |
+| One person per account | ORG mostly n/a (keep the items about a single-user account); CRM/GRW n/a unless sales-led |
 | Web only | MOB n/a; PLAT per-target sections n/a (keep the 19 general PLAT items) |
 | Non-web surfaces | PLAT target sections for each chosen surface in scope; MOB if native app or PWA |
-| No LLM in the product | AI n/a |
+| No AI/ML in the product (no LLM, no vision, speech or other ML API) | AI n/a |
+| Goal = audit only (no changes yet) | SPEC n/a until changes start |
 | No messaging channel | MSG n/a |
 | No public API, SDK or webhooks | DOC n/a; ADM-06, ADM-07 n/a |
 | Managed hosting only (no self-hosting) | INF n/a |
@@ -56,12 +57,15 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
    - **Greenfield** (new app): create the repo from the starter, then copy this folder to `<repo>/docs/launch/`.
    - **Brownfield** (app already running): never regenerate the base over it. Copy this folder to `<repo>/docs/launch/` and follow *Brownfield adoption* in `areas/scaffold.md` (gap audit → safety net → kit one package at a time).
 
-   `scripts/init.py` does the copy and creates `STATUS.md`; `scripts/status.py` reports progress.
+   `scripts/init.py` does the copy (including `scripts/` and `templates/`) and creates `STATUS.md`; `scripts/status.py` reports progress.
 
    Then go through the global map and mark each area `applies` / `n/a (reason)` in `docs/launch/STATUS.md` — n/a areas are not deleted, so the decision is visible.
 2. **Per phase:** before starting a phase, the agent reads only that phase's area files and installs that phase's tools from `TOOLING.md` (ask the user first; project scope).
-3. **IDs everywhere:** plans, PRs, commits and `docs/PENDING.md` cite item IDs (`EML-03`, `PERF-B4`). Items needing a human (account, lawyer, pricing decision) go to `docs/PENDING.md → ## Needs user`.
-4. **Evidence:** mark `[x]` only with evidence next to it (test name, screenshot path, URL, command output). "Deployed" is not evidence; "exercised in staging as a user" is.
+3. **IDs everywhere:** plans, PRs, commits and the repo's pending list (default `docs/PENDING.md`) cite item IDs (`EML-03`, `PERF-B4`). Items needing a human (account, lawyer, pricing decision) go to its `## Needs user` section. Paths named in items (`docs/decisions/`, `docs/PENDING.md`) are defaults: an existing equivalent in the repo counts.
+4. **Evidence:** mark `ok` only with evidence next to it (test name, screenshot path, URL, command output). "Deployed" is not evidence; "exercised in staging as a user" is.
+   - Partly met → `diverges`; the evidence names which parts fail.
+   - Fails only because another item fails (e.g. no CI) → status `missing`/`diverges` with evidence starting `→ CI-01`; `status.py` lists these apart, so one root cause is not counted as many gaps.
+   - Area applies only in part → Applies `partial (reason)`, then mark the items that do not apply `n/a (reason)`.
 5. **Reuse:** before building an item, check whether a previous app already solved it and copy that implementation.
 6. **Changing an existing app** (improve a screen, add a feature): follow `areas/spec-flow.md` — a short spec + slices, acceptance by item IDs; no full launch pass.
 
@@ -76,34 +80,34 @@ Phases are an order of attack, not a waterfall: L1 items of every applicable are
 | 0. Discover | Product and requirements | PRD | `areas/product.md` | always | 9 (6) |
 | 0. Discover | Architecture and decisions | ARC | `areas/architecture.md` | always | 8 (5) |
 | 0. Discover | Scaffold and starter kit | SCF | `areas/scaffold.md` | always — first action (greenfield or brownfield track) | 13 (9) |
-| 0. Discover | Brand, logo, positioning | BRD | `areas/brand.md` | always | 9 (7) |
+| 0. Discover | Brand, logo, positioning | BRD | `areas/brand.md` | always | 10 (7) |
 | 0. Discover | Spec flow for changes and improvements | SPEC | `areas/spec-flow.md` | changing or improving an existing app | 8 (5) |
 | 0. Discover | Domain and business rules | DOM | `areas/domain.md` | always | 30 (23) |
 | 0. Discover | Target platforms | PLAT | `areas/platforms.md` | always — decide every surface | 19 (10) + 48 (18) per in-scope target |
 | 1. Design | Design system and prototyping | DES | `areas/design.md` | always | 16 (10) |
 | 1. Design | Marketing site and SEO | WEB | `areas/marketing-site.md` | public product | 13 (7) |
 | 1. Design | UX polish | UX | `areas/ux-polish.md` | always | 8 (5) |
-| 1. Design | UX and UI patterns | UXP | `areas/ux-patterns.md` | always (any UI) | 125 (84) |
+| 1. Design | UX and UI patterns | UXP | `areas/ux-patterns.md` | always (any UI) | 128 (84) |
 | 1. Design | App shell and navigation | SHL | `areas/app-shell.md` | authenticated web app | 58 (41) |
-| 2. Build | Identity and accounts | AUTH | `areas/auth.md` | always | 11 (5) |
+| 2. Build | Identity and accounts | AUTH | `areas/auth.md` | always | 12 (5) |
 | 2. Build | Account and personal settings | ACC | `areas/account.md` | always (signed-in users) | 49 (27) |
 | 2. Build | Tenancy and customer-side admin | ADM | `areas/admin.md` | always | 7 (3) |
 | 2. Build | Organizations, members and roles | ORG | `areas/organization.md` | multi-user / multi-tenant | 47 (31) |
-| 2. Build | Owner console / backoffice | CON | `areas/owner-console.md` | always | 30 (15) |
+| 2. Build | Owner console / backoffice | CON | `areas/owner-console.md` | always | 31 (15) |
 | 2. Build | Billing | BIL | `areas/billing.md` | paid product | 12 (8) |
 | 2. Build | Email infra and lifecycle | EML | `areas/email.md` | always | 32 (18) |
 | 2. Build | Onboarding and activation | ONB | `areas/onboarding.md` | always | 7 (4) |
-| 2. Build | API design | API | `areas/api.md` | always (internal API too) | 10 (7) |
+| 2. Build | API design | API | `areas/api.md` | always (internal API too) | 11 (7) |
 | 2. Build | Platform blocks: uploads, jobs, cron, realtime, search, flags | PLT | `areas/platform.md` | per block used | 10 (6) |
 | 2. Build | AI / LLM features | AI | `areas/ai.md` | product calls an LLM | 11 (7) |
 | 2. Build | Messaging: WhatsApp, SMS | MSG | `areas/messaging.md` | sends/receives messages | 10 (6) |
 | 2. Build | Mobile, PWA, push | MOB | `areas/mobile.md` | native app or PWA | 10 (6) |
 | 2. Build | i18n / l10n | I18N | `areas/i18n.md` | always (I18N-01..06) | 10 (6) |
-| 2. Build | Accessibility | A11Y | `areas/accessibility.md` | always | 10 (6) |
+| 2. Build | Accessibility | A11Y | `areas/accessibility.md` | always | 12 (6) |
 | 3. Harden | Performance | PERF | `areas/performance.md` | always | 26 (15) |
-| 3. Harden | Security | SEC | `areas/security.md` | always | 13 (10) |
+| 3. Harden | Security | SEC | `areas/security.md` | always | 15 (10) |
 | 3. Harden | Privacy and legal | LGL | `areas/privacy-legal.md` | always | 11 (7) |
-| 3. Harden | Testing and reliability | TST, REL | `areas/testing.md` | always | 15 (10) |
+| 3. Harden | Testing and reliability | TST, REL | `areas/testing.md` | always | 16 (10) |
 | 3. Harden | Database | DB | `areas/database.md` | always | 12 (7) |
 | 3. Harden | Infrastructure | INF | `areas/infra.md` | self-hosted | 13 (8) |
 | 3. Harden | CI/CD | CI | `areas/cicd.md` | always | 19 (10) |
@@ -114,7 +118,7 @@ Phases are an order of attack, not a waterfall: L1 items of every applicable are
 | 5. Operate | Cost and unit economics | FIN | `areas/cost.md` | always | 9 (4) |
 | 5. Operate | Data, BI, reporting | DATA | `areas/data.md` | always (L1 = 3 items) | 9 (3) |
 | 5. Operate | Sales, customer success, growth | CRM, GRW | `areas/sales-growth.md` | B2B or sales-led | 12 (4) |
-| 5. Operate | Engineering process | ENG | `areas/engineering.md` | always | 9 (4) |
+| 5. Operate | Engineering process | ENG | `areas/engineering.md` | always | 10 (4) |
 
 ### Cross-area threads (same concern, several files)
 

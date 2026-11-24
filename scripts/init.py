@@ -15,7 +15,7 @@ QUESTIONS = [
     "Track: greenfield (new app) or brownfield (already in production)?",
     "Goal now: full launch audit / prepare a launch / improve one part / review a screen's UX?",
     "Paid product? Billing model?",
-    "Audience: B2B (orgs, members, roles), B2C, or both?",
+    "Accounts: one person per account, team accounts (members, roles), or both?",
     "Target surfaces (web, PWA, iOS, Android, desktop, CLI, extension, bot, API/MCP)?",
     "Languages and countries served?",
     "Stack already chosen?",
@@ -46,10 +46,11 @@ def build_status(areas_dir):
            "| # | Question | Answer |", "| --- | --- | --- |"]
     out += [f"| {i} | {q} |  |" for i, q in enumerate(QUESTIONS, 1)]
     out += ["", "## Areas", "",
-            "| Area file | Prefix | Applies (yes/no) | Reason |", "| --- | --- | --- | --- |"]
+            "| Area file | Prefix | Applies (yes / no / partial) | Reason |", "| --- | --- | --- | --- |"]
     out += [f"| `areas/{p.name}` | {pre} | yes |  |" for p, pre, _ in areas]
     out += ["", "## Items", "",
-            "Status: `todo` / `ok` / `missing` / `diverges` / `n/a`. Evidence: test name, screenshot path, URL, ADR link.", ""]
+            "Status: `todo` / `ok` / `missing` / `diverges` (partly met: say which part fails) / `n/a (reason)`. "
+            "Evidence: test name, screenshot path, URL, ADR link; `→ ID` when it fails only because that item fails.", ""]
     for p, pre, items in areas:
         out += [f"### {pre} (`areas/{p.name}`)", "", "| ID | L | Status | Evidence |", "| --- | --- | --- | --- |"]
         out += [f"| {i} | {lv} | todo |  |" for i, lv in items]
@@ -70,7 +71,9 @@ def main():
     target.mkdir(parents=True, exist_ok=True)
     for name in FILES:
         shutil.copy2(ROOT / name, target / name)
-    shutil.copytree(ROOT / "areas", target / "areas", dirs_exist_ok=True)
+    for name in ("areas", "scripts", "templates"):
+        shutil.copytree(ROOT / name, target / name, dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("__pycache__", "check.py"))  # check.py is for maintainers
 
     status = target / "STATUS.md"
     if status.exists():
@@ -82,7 +85,7 @@ def main():
           f"  1. Ask the agent to follow {args.target}/SKILL.md (it asks the kickoff questions first).\n"
           f"  2. Answers go in the Kickoff block of {args.target}/STATUS.md; set Applies=no (with a reason) for n/a areas.\n"
           f"  3. Mark items ok / missing / diverges / n/a with evidence.\n"
-          f"  4. Report progress: python3 {ROOT / 'scripts' / 'status.py'} --file {args.target}/STATUS.md")
+          f"  4. Report progress: python3 {args.target}/scripts/status.py --file {args.target}/STATUS.md")
     return 0
 
 

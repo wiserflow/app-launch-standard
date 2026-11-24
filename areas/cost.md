@@ -2,10 +2,10 @@
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| FIN-01 | 1 | Every paid provider (cloud, LLM, messaging, SMS, email) has a billing alert and a hard cap or budget |
-| FIN-02 | 1 | LLM keys per environment; provider-side monthly limit + app-side per-tenant daily cap that **fails closed** (AI-02) |
-| FIN-03 | 1 | Every LLM / messaging / SMS call logged with `tenant_id`, model/units and cost |
-| FIN-04 | 1 | Unit economics known: cost per active tenant vs plan price; margin positive on the cheapest plan |
+| FIN-01 | 1 | Every paid provider (cloud, LLM, messaging, SMS, email) has a billing alert and a hard cap or budget. Alert is mandatory; where the provider offers only an alert, the alert alone passes if a manual cutoff step is documented. Covers non-LLM per-use services too (e.g. media analysis, GPU, email) |
+| FIN-02 | 1 | (n/a if the product has no LLM) LLM keys per environment; provider-side monthly limit + app-side per-tenant (per-account if one person per account) daily cap that **fails closed** (AI-02) |
+| FIN-03 | 1 | (n/a if none of these are used; other paid per-use services follow the same rule) Every LLM / messaging / SMS call logged with `tenant_id` (account id if one person per account), model/units and cost |
+| FIN-04 | 1 | Unit economics known: cost per active tenant (account if one person per account; active = definition recorded, e.g. used the core feature in 30 days; costs = infra share + payment fees + variable provider spend) vs plan price; margin positive on the cheapest paid plan (a free tier is a cost to budget, not the cheapest plan) |
 | FIN-05 | 2 | Per-tenant cost dashboard (infra share + variable) with top-10 tenants by cost |
 | FIN-06 | 2 | Anomaly alert when spend > 2× the 7-day average, per provider and per tenant |
 | FIN-07 | 2 | Plan limits (messages, seats, storage, AI credits) enforced in code, not only on the pricing page (BIL-01) |
