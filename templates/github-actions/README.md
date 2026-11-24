@@ -47,4 +47,6 @@ If the deploy workflow lives in another repo or org, its `GITHUB_TOKEN` cannot r
 | CI-17 | Cost: `paths-ignore`, CI concurrency cancel, docker build only on Dockerfile/lockfile change, gha cache |
 | CI-19 | Registry: GHCR `ghcr.io/<org>/<app>-<service>`, immutable `sha-<commit>` plus `vX.Y.Z` and `prod` |
 
+Promotion only works if images are environment-agnostic (CI-16): read config at runtime per environment; never bake environment values at build (e.g. `VITE_*`/`NEXT_PUBLIC_*`), or the promoted image points prod at staging.
+
 If the `ci.yml` checks are required on a protected branch, runs skipped by `paths-ignore` block merges: do not make them required, or filter inside the job.

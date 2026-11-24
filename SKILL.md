@@ -7,7 +7,7 @@ compatibility: Any agent that supports Agent Skills; tool install commands in TO
 
 # App Launch Standard
 
-Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 775 items (471 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
+Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 775 items (469 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
 
 | File | Content |
 | --- | --- |
@@ -106,7 +106,7 @@ Phases are an order of attack, not a waterfall: L1 items of every applicable are
 | 3. Harden | Testing and reliability | TST, REL | `areas/testing.md` | always | 15 (10) |
 | 3. Harden | Database | DB | `areas/database.md` | always | 12 (7) |
 | 3. Harden | Infrastructure | INF | `areas/infra.md` | self-hosted | 13 (8) |
-| 3. Harden | CI/CD | CI | `areas/cicd.md` | always | 19 (12) |
+| 3. Harden | CI/CD | CI | `areas/cicd.md` | always | 19 (10) |
 | 4. Launch | Observability, alerting, status | OBS, OPS | `areas/observability.md` | always | 17 (9) |
 | 4. Launch | Product analytics and metrics | ANL | `areas/analytics.md` | always | 6 (2) |
 | 4. Launch | Support and communication | SUP | `areas/support.md` | always | 13 (5) |
