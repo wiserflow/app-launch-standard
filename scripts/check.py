@@ -7,9 +7,12 @@ import re
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 from init import ITEM, ROOT, parse_area
 
-ID_ROW = re.compile(r"^\|\s*([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)\s*\|\s*([^|]*?)\s*\|")
+ITEM_HEADER = re.compile(r"^\|\s*ID\s*\|\s*L\s*\|")
+TABLE_ROW = re.compile(r"^\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|")
+ID_CITE = re.compile(r"\b(?!T-\d)[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b")
 MAP_ROW = re.compile(r"`areas/([a-z-]+\.md)`.*\|\s*(\d+) \((\d+)\)(?: \+ (\d+) \((\d+)\)[^|]*)?\s*\|\s*$")
 SUMMARY = re.compile(r"(\d+) areas, (\d+) (?:checklist )?items \((\d+) launch blockers\) plus (\d+) target-specific")
 
@@ -24,10 +27,16 @@ def main():
         prefixes = [p.strip() for p in prefix.split("/") if p.strip()]
         if not prefixes:
             errors.append(f"{path.name}: heading has no '(PREFIX)'")
+        in_items = False
         for line in path.read_text(encoding="utf-8").splitlines():
-            m = ID_ROW.match(line)
-            if m and not ITEM.match(line) and re.fullmatch(r"L?\d", m.group(2)):
-                errors.append(f"{path.name}: {m.group(1)} has invalid level '{m.group(2)}' (use 1, 2 or 3)")
+            if ITEM_HEADER.match(line):
+                in_items = True
+            elif not line.startswith("|"):
+                in_items = False
+            elif in_items and not set(line) <= set("|- :"):
+                m = TABLE_ROW.match(line)
+                if m and not ITEM.match(line):
+                    errors.append(f"{path.name}: '{m.group(1)}' has invalid level '{m.group(2)}' (use 1, 2 or 3)")
         for item_id, _ in items:
             if item_id in seen:
                 errors.append(f"{path.name}: duplicate ID {item_id} (also in {seen[item_id]})")
@@ -39,6 +48,17 @@ def main():
         counts[path.name] = (len(base), base.count("1"), len(target), target.count("1"))
 
     skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    fm = re.match(r"---\n(.*?)\n---\n", skill, re.S)
+    meta = dict(l.split(": ", 1) for l in fm.group(1).splitlines() if ": " in l) if fm else {}
+    if meta.get("name") != "app-launch-standard":
+        errors.append(f"SKILL.md: frontmatter name must be 'app-launch-standard', got {meta.get('name')!r}")
+    if not meta.get("description"):
+        errors.append("SKILL.md: frontmatter description missing")
+    elif len(meta["description"]) > 1024:
+        errors.append(f"SKILL.md: frontmatter description is {len(meta['description'])} chars (max 1024)")
+    for name in ("SKILL.md", "RUNBOOK.md"):
+        for cited in sorted(set(ID_CITE.findall((ROOT / name).read_text(encoding="utf-8"))) - seen.keys()):
+            errors.append(f"{name}: cites {cited}, not an item ID in areas/")
     for line in skill.splitlines():
         m = MAP_ROW.search(line)
         if not m or m.group(1) not in counts:

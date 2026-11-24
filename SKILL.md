@@ -1,11 +1,13 @@
 ---
 name: app-launch-standard
 description: Project-agnostic standard (42 areas, ~800 checklist items with stable IDs and L1/L2/L3 levels) for building, launching and improving a production-grade app or SaaS - app shell and navigation, profile/account, organizations/members/roles, concrete UX/UI patterns, email, billing, auth, security, privacy, performance, observability, CI/CD, platforms (web, mobile, desktop, CLI, extensions, bots, MCP). Use when starting a new app (greenfield), auditing or upgrading an app already in production (brownfield), planning a launch, improving a screen or feature with a lightweight spec, or reviewing UX/UI quality.
+license: MIT
+compatibility: Any agent that supports Agent Skills; tool install commands in TOOLING.md are Claude Code examples
 ---
 
 # App Launch Standard
 
-Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 769 items (465 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
+Project-agnostic standard for building and launching an app or SaaS that looks and behaves like a mature company product. 42 areas, 771 items (467 launch blockers) plus 48 target-specific PLAT items that apply only to targets in scope, each with a stable ID. Audience: agents and devs starting the next app. Tools are suggestions; the requirement is the item.
 
 | File | Content |
 | --- | --- |
@@ -98,8 +100,8 @@ Phases are an order of attack, not a waterfall: L1 items of every applicable are
 | 2. Build | i18n / l10n | I18N | `areas/i18n.md` | always (I18N-01..06) | 10 (6) |
 | 2. Build | Accessibility | A11Y | `areas/accessibility.md` | always | 10 (6) |
 | 3. Harden | Performance | PERF | `areas/performance.md` | always | 26 (15) |
-| 3. Harden | Security | SEC | `areas/security.md` | always | 12 (9) |
-| 3. Harden | Privacy and legal | LGL | `areas/privacy-legal.md` | always | 10 (6) |
+| 3. Harden | Security | SEC | `areas/security.md` | always | 13 (10) |
+| 3. Harden | Privacy and legal | LGL | `areas/privacy-legal.md` | always | 11 (7) |
 | 3. Harden | Testing and reliability | TST, REL | `areas/testing.md` | always | 15 (10) |
 | 3. Harden | Database | DB | `areas/database.md` | always | 12 (7) |
 | 3. Harden | Infrastructure | INF | `areas/infra.md` | self-hosted | 13 (8) |

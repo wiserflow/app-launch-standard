@@ -6,8 +6,8 @@ Uploads, background jobs, cron, realtime, search, notifications, feature flags.
 | --- | --- | --- |
 | PLT-01 | 1 | Uploads go direct to the bucket via short-lived presigned URLs; size + MIME enforced server-side; tenant-prefixed keys |
 | PLT-02 | 1 | Buckets private; downloads via signed URLs; user files served from a separate domain or with `Content-Disposition: attachment` |
-| PLT-03 | 1 | Jobs idempotent with explicit attempts + backoff, `removeOnComplete`/`removeOnFail` set, failed-job alert, dead-letter |
-| PLT-04 | 1 | Workers shut down gracefully on SIGTERM; Redis `maxmemory-policy noeviction` + persistence for queues |
+| PLT-03 | 1 | Jobs idempotent with explicit attempts + backoff, completed/failed job retention bounded (e.g. BullMQ `removeOnComplete`/`removeOnFail`), failed-job alert, dead-letter |
+| PLT-04 | 1 | Workers shut down gracefully on SIGTERM; queue backend never evicts queue data and persists it (e.g. Redis `noeviction` + AOF) |
 | PLT-05 | 1 | One cron scheduler (e.g. BullMQ job schedulers), overlap-safe, monitored for missed runs (OBS-05) |
 | PLT-06 | 1 | WebSocket/SSE: auth at connect, authorization per channel/tenant, heartbeat, client reconnect with backoff |
 | PLT-07 | 2 | Search index sync queue-driven, full-reindex command exists, tenant filter enforced server-side with scoped keys |

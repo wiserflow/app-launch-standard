@@ -17,7 +17,7 @@
 | --- | --- | --- |
 | TST-01 | 1 | Written test strategy: what is covered at unit, integration and e2e; e2e limited to critical journeys |
 | TST-02 | 1 | CI blocks merge on unit/integration failure |
-| TST-03 | 1 | Integration tests run against real Postgres and Redis, not mocks |
+| TST-03 | 1 | Integration tests run against real database, cache and queue backends (same engines as production), not mocks |
 | TST-04 | 1 | Tenant-isolation test proves tenant A cannot read tenant B (SEC-02) |
 | TST-05 | 1 | Test data from factories; no shared mutable fixtures, no dependence on dev DB state |
 | TST-06 | 1 | Pre-release smoke checklist run on staging; results recorded |

@@ -1,6 +1,6 @@
 # Skills and MCP servers by case
 
-Verified 2026-11-23 (repo active, install command from vendor docs unless marked *composed*). Rules:
+Verified 2026-11-23 (repo active, install command from vendor docs unless marked *composed*). Install commands using `claude mcp add` and `/plugin` are **Claude Code examples**; other agents install the same servers and skills with their own equivalents. "House stack" means your organization's reference stack, if any. Rules:
 
 - **Project scope by default** (`npx skills add …` without `-g`; `claude mcp add --scope project` → `.mcp.json`). Global only for read-only generic tools (Context7). Ask the user before installing.
 - **Every MCP costs context every session** → install only what the current phase uses; remove after.
@@ -13,10 +13,10 @@ Verified 2026-11-23 (repo active, install command from vendor docs unless marked
 
 | Phase | Areas | Install for the phase | Remove after? |
 | --- | --- | --- | --- |
-| 0. Discover | SCF, PRD, ARC, BRD | Better-T-Stack plugin, `to-spec`, `grill-me`, ADR + C4 skills | C4 once diagrams exist |
+| 0. Discover | SCF, PRD, ARC, BRD | Better-T-Stack plugin (example), `to-spec`, `grill-me`, ADR + C4 skills | C4 once diagrams exist |
 | 1. Design | DES, BRD, WEB | impeccable, shadcn skill + MCP, frontend-design, Excalidraw, Playwright CLI | Excalidraw, frontend-design |
 | 2. Build | AUTH, BIL, EML, ONB, API, PLT, AI, MOB, I18N, ADM, MSG | Context7, Better Auth, oRPC, Standard Webhooks, Postgres skill + DBHub (dev, read-only), Storybook MCP, Stripe/Resend skills, Langfuse/evals, Expo, i18n lib skill | — |
-| 3. Harden | PERF, SEC, LGL, TST, A11Y, DB, INF, CI | qa-skills, accessibility, Trail of Bits, Semgrep, lgpd-skills, Cloudflare/Docker, CI hardening, Chrome DevTools MCP | Most audit tools |
+| 3. Harden | PERF, SEC, LGL, TST, A11Y, DB, INF, CI | qa-skills, accessibility, Trail of Bits, Semgrep, privacy-law skill, Cloudflare/Docker, CI hardening, Chrome DevTools MCP | Most audit tools |
 | 4. Launch | WEB, OBS, ANL, SUP, DOC | Front-End Checklist, web-design-guidelines, marketingskills, Sentry MCP, PostHog MCP | Audit tools |
 | 5. Operate & grow | FIN, DATA, CRM, GRW, ENG | Metabase/ClickHouse MCP, CRM skills/MCP, Grafana MCP | — |
 
@@ -24,10 +24,10 @@ Verified 2026-11-23 (repo active, install command from vendor docs unless marked
 
 | Item | Install | Use |
 | --- | --- | --- |
-| Better-T-Stack plugin (MCP + skills + commands) | `/plugin marketplace add AmanVarshney01/create-better-t-stack` → `/plugin install better-t-stack@better-t-stack` | Agent plans a valid stack and generates it; `/better-t-stack:new <description>`. Plugin → bypasses `skills-lock.json`; remove after scaffolding |
+| Better-T-Stack plugin (MCP + skills + commands; Claude Code plugin) | `/plugin marketplace add AmanVarshney01/create-better-t-stack` → `/plugin install better-t-stack@better-t-stack` | Agent plans a valid stack and generates it; `/better-t-stack:new <description>`. Plugin → bypasses `skills-lock.json`; remove after scaffolding |
 | Better-T-Stack CLI | `bun create better-t-stack@latest <app> … --dry-run` | Generated base (flags in `areas/scaffold.md`) |
 | Better Auth admin plugin | part of `better-auth` | Ban, impersonation, session control for the console (CON-11, CON-12) |
-| Admin frameworks (optional) | Refine, react-admin, Appsmith | Only if not building `apps/console` on the house stack |
+| Admin frameworks (optional) | Refine, react-admin, Appsmith | Only if not building `apps/console` on your reference stack |
 
 ## Base (most projects)
 
@@ -36,7 +36,7 @@ Verified 2026-11-23 (repo active, install command from vendor docs unless marked
 | Library docs | Context7 | `claude mcp add --transport http context7 https://mcp.context7.com/mcp --header "Authorization: Bearer $CONTEXT7_KEY"` | Global OK; read-only |
 | Browser verification | Playwright CLI + skills | `npm i -g @playwright/cli@latest && playwright-cli install --skills` | Cheaper in tokens than the MCP; MCP alt: `claude mcp add playwright npx @playwright/mcp@latest` |
 | Perf/network/console debugging | Chrome DevTools MCP | `claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest --no-usage-statistics --headless --isolated` | `--no-usage-statistics` (telemetry on by default); `--isolated` avoids real-profile cookies |
-| Security review | Trail of Bits skills | `/plugin marketplace add trailofbits/skills` | `differential-review`, `insecure-defaults`, `supply-chain-risk-auditor`; plus built-in `/security-review` |
+| Security review | Trail of Bits skills | `/plugin marketplace add trailofbits/skills` | `differential-review`, `insecure-defaults`, `supply-chain-risk-auditor`; plus your agent's built-in security review (Claude Code: `/security-review`) |
 | SAST | Semgrep MCP | `claude mcp add semgrep -- semgrep mcp` *(composed; needs Semgrep CLI)* | Old `semgrep/mcp` repo is archived — do not use |
 | Auth | Better Auth skills | `npx skills add better-auth/skills` | best-practices, organization, twoFactor, security |
 
@@ -96,7 +96,7 @@ Skip: 21st.dev Magic MCP (pulls components outside the design system, third-part
 | Postgres tuning | Postgres MCP Pro | `uvx postgres-mcp --access-mode=restricted` | Index tuning, EXPLAIN, health; releases slow |
 | CI security | Sentry `gha-security-review` | `claude plugin marketplace add getsentry/skills` | Actions security review |
 | CI hardening | github-actions-hardening | `npx skills add github/awesome-copilot@github-actions-hardening` | |
-| GitHub | `gh` CLI (already present) | — | GitHub MCP is redundant; if used: fine-grained PAT for one repo, read-only toolsets |
+| GitHub | `gh` CLI | — | GitHub MCP is redundant; if used: fine-grained PAT for one repo, read-only toolsets |
 
 Do not use: archived `modelcontextprotocol` postgres server, Hetzner community MCPs (stale → use `hcloud` CLI), Kubernetes/AWS/Supabase/Neon MCPs unless the stack uses them.
 
@@ -104,7 +104,7 @@ Do not use: archived `modelcontextprotocol` postgres server, Hetzner community M
 
 | Item | Install | Note |
 | --- | --- | --- |
-| lgpd-skills | `npx skills add goul4rt/lgpd-skills` | Community, unreviewed: read SKILL.md first; output is a checklist, not legal advice |
+| Privacy-law skill for your jurisdiction (e.g. GDPR, CCPA, LGPD community skills) | `npx skills add <owner>/<privacy-skill>` | Community, unreviewed: read SKILL.md first; output is a checklist, not legal advice |
 
 ## Product, architecture, API (PRD / ARC / API)
 
@@ -133,7 +133,7 @@ Skip as default: GitHub spec-kit, BMAD-METHOD (duplicate superpowers, write many
 | i18next (official) | `npx skills add i18next/i18next-cli --skill i18next-localization` | If using i18next |
 | Tools (not agent) | `@axe-core/playwright`, `@faker-js/faker`, StrykerJS | Skip Deque axe MCP (paid) |
 
-TDD: keep superpowers `test-driven-development`; do not add a second TDD skill.
+TDD: keep one TDD skill (e.g. superpowers `test-driven-development`); do not add a second.
 
 ## AI features (AI / FIN)
 
@@ -143,7 +143,7 @@ TDD: keep superpowers `test-driven-development`; do not add a second TDD skill.
 | evals-skills | `npx skills add ai-evals-course/evals-skills --skill evals-start --skill eval-audit` | Error analysis, LLM-judge design and validation |
 | promptfoo (official) | `npx skills add promptfoo/promptfoo --skill promptfoo-evals` | Evals + red-team in CI |
 | OWASP secure-agent-playbook | `npx skills add OWASP/secure-agent-playbook --skill llm-risk-assess --skill prompt-injection-test` | AI-03..06 review (nested path; may need full path) |
-| claude-api (already installed) | — | Claude API usage, caching, models |
+| claude-api (Anthropic skill, if building on Claude) | — | Claude API usage, caching, models |
 
 Do not use: `mattpocock/evalite`, `hamelsmu/evals-skills` (both archived). Promptfoo red-team and hosted Langfuse send prompts to third parties → mask PII.
 
@@ -178,7 +178,7 @@ Do not use: `mattpocock/evalite`, `hamelsmu/evals-skills` (both archived). Promp
 | Notifications | Novu skills + MCP | `npx skills add novuhq/skills` · `https://mcp.novu.co/` | `novuhq/novu-mcp-server` repo archived |
 | Flags | GrowthBook / Unleash MCP | `npx -y @growthbook/mcp@latest` · `npx -y @unleash/mcp@latest` | Only if not using PostHog flags |
 | Jobs | — | — | No good BullMQ skill: follow BullMQ production guide (PLT-03..05) |
-| Code review | built-in `/code-review`, superpowers review skills | — | Already installed |
+| Code review | your agent's built-in review command, review skills | — | Claude Code: `/code-review` |
 | Code review | CodeRabbit skills | `npx skills add coderabbitai/skills --skill code-review` | Needs CodeRabbit CLI + login |
 | SMS | Twilio skills | `npx skills add twilio/ai` | Twilio MCP is alpha and exposes the whole API → API key + service filter |
 | WhatsApp | — | — | No official Meta MCP/skill; call Graph API directly. Avoid `lharries/whatsapp-mcp` (unofficial, unmaintained) |
