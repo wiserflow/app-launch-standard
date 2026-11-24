@@ -1,4 +1,4 @@
-# Observability (OBS)
+# Observability (OBS / OPS)
 
 | ID | L | Requirement |
 | --- | --- | --- |
