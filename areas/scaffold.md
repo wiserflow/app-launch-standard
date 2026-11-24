@@ -44,9 +44,9 @@ Change flags per app (`--frontend tanstack-start`, `native-uniwind` for Expo, `f
 | ID | L | Requirement |
 | --- | --- | --- |
 | SCF-01 | 1 | New app created from the starter (base + house kit) in ≤ 1 hour, including `bun run up` working locally |
-| SCF-02 | 1 | Generator flags recorded in `docs/decisions/` (ADR "stack") so the base can be regenerated/compared later |
+| SCF-02 | 1 | Generator flags recorded in the repo's decisions folder (default `docs/decisions/`; ADR "stack") so the base can be regenerated/compared later |
 | SCF-03 | 1 | Starter has zero product-specific code, names or secrets; app name/domain set by one init script |
-| SCF-04 | 1 | `.env.example` complete; init script creates DB, Redis container, ports block, and copies the standard to `docs/launch/` |
+| SCF-04 | 1 | `.env.example` complete (every env var the code reads is listed, with no real values); init script creates DB, Redis container, ports block, and copies the standard to `docs/launch/` |
 | SCF-05 | 1 | Starter CI green on a fresh clone (lint, types, tests, build, e2e smoke) |
 | SCF-06 | 2 | Improvements made in a product that are generic are **upstreamed** to the starter (PR to starter repo), not left in the product |
 | SCF-07 | 2 | Starter dependencies kept current (Renovate) and re-validated against a fresh Better-T-Stack output each quarter |
@@ -56,6 +56,8 @@ Change flags per app (`--frontend tanstack-start`, `native-uniwind` for Expo, `f
 ## Brownfield adoption (app already running)
 
 The generated base is **not** run over an existing repo — it overwrites structure. The standard (checklists) applies in full; the house kit is adopted piece by piece.
+
+In `scripts/status.py`, mark SCF-01, SCF-03, SCF-05 `n/a` (replaced) in brownfield and audit SCF-10..13 instead.
 
 | Greenfield item | In brownfield |
 | --- | --- |
@@ -71,8 +73,8 @@ How much of the kit fits depends on the stack: same stack as the kit (e.g. Hono 
 | ID | L | Requirement |
 | --- | --- | --- |
 | SCF-10 | 1 | Gap audit: every item of each applicable area marked in `docs/launch/STATUS.md` (`scripts/init.py`, `scripts/status.py`) as `ok (evidence)` / `missing` / `diverges (ADR link)`; `missing` L1 items become tasks citing their IDs |
-| SCF-11 | 1 | Stack diff vs the reference stack (if none: the chosen stack and why) recorded in `docs/decisions/` (ADR): what stays, what converges, what never will and why |
+| SCF-11 | 1 | Stack diff vs the reference stack (if none: the chosen stack and why) recorded in the repo's decisions folder (default `docs/decisions/`; ADR): what stays, what converges, what never will and why |
 | SCF-12 | 1 | Kit adopted one package per PR, behind a flag where it changes runtime behavior, with a rollback path; the affected journey has a smoke/e2e test **before** the swap; schema changes are additive first (expand → migrate → contract) |
-| SCF-13 | 1 | Safety net before any kit adoption: OBS-01 error tracking, OBS-03 health checks, DB-03 backup with restore tested, SEC-07 secrets out of the repo, CI-06 rollback command |
+| SCF-13 | 1 | Safety net before any kit adoption: OBS-01 error tracking, OBS-03 health checks, DB-03 backup with restore tested, SEC-07 secrets out of the repo, CI-06 rollback command. Proof: `ok` only when all five are `ok` (→ OBS-01, OBS-03, DB-03, SEC-07, CI-06); otherwise `missing`, naming the open sub-items |
 
 References: [Better-T-Stack docs](https://better-t-stack.dev) · [shadcn registry](https://ui.shadcn.com/docs/registry) · comparable full starters to borrow patterns from: open-saas, ixartz SaaS-Boilerplate, BoxyHQ saas-starter-kit (see `REFERENCES.md`).

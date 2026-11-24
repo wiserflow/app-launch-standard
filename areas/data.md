@@ -4,9 +4,9 @@ Small-SaaS default: read replica or nightly DuckDB/Parquet export + Metabase. Cl
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| DATA-01 | 1 | BI never queries the primary: read replica or export, read-only role |
-| DATA-02 | 1 | Core metrics (MRR, active tenant, activation, churn) defined once in writing, SQL in the repo |
-| DATA-03 | 1 | BI/MCP credentials read-only, PII columns excluded, never the app's DB user |
+| DATA-01 | 1 | BI never queries the primary: read replica or export, read-only role; an in-app admin console counts as BI and must read through that restricted role |
+| DATA-02 | 1 | Core metrics (MRR, active tenant (one person per account: active user), activation, churn) defined once in writing, with the query or metric code in the repo (SQL, or application code if metrics are computed there) |
+| DATA-03 | 1 | BI/MCP (or admin console) credentials read-only, PII columns excluded, never the app's DB user |
 | DATA-04 | 2 | Founder dashboard: signups, activation, MRR, churn, usage per tenant (ANL-04) |
 | DATA-05 | 2 | Event tables append-only with `tenant_id` + `occurred_at`; time-partitioned or TTL |
 | DATA-06 | 2 | Customer-facing reports tenant-scoped at the query layer and tested for cross-tenant leaks |

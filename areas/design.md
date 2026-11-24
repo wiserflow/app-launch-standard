@@ -28,15 +28,15 @@ Design is where agents drift most: each screen invents its own spacing, colors a
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| DES-01 | 1 | `DESIGN.md` exists (google-labs-code/design.md format) and `npx @google/design.md lint` reports 0 errors |
+| DES-01 | 1 | `DESIGN.md` exists (google-labs-code/design.md format) and the design-file linter (e.g. `@google/design.md lint`, pinned as a devDependency so it runs offline) reports 0 errors |
 | DES-02 | 1 | All colors are semantic tokens in `@theme`; default Tailwind palette reset (`--color-*: initial`) so `bg-blue-500` does not exist |
 | DES-03 | 1 | Light and dark themes defined; every text/background pair passes WCAG AA |
-| DES-04 | 1 | One type scale, max 2 font families, fonts self-hosted |
-| DES-05 | 1 | Spacing, radius, shadow scales defined; no arbitrary values in code (lint passes in CI) |
+| DES-04 | 1 | One type scale, max 2 font families (user-selectable theme fonts in white-label products are excluded), fonts self-hosted |
+| DES-05 | 1 | Spacing, radius, shadow scales defined; no arbitrary values in code (lint passes in CI → CI-02) |
 | DES-06 | 1 | Every UI primitive comes from shadcn or the own registry; no duplicate implementations of the same component |
 | DES-07 | 1 | One form-field pattern (label, help, error), one icon set at consistent sizes, one page shell (header, nav, paddings) |
 | DES-08 | 1 | Every screen prototyped and approved **before** feature code |
-| DES-09 | 1 | Every screen has loading, empty and error states; checked at 375, 768, 1280 px |
+| DES-09 | 1 | Every screen has loading, empty and error states; checked at 375, 768, 1280 px. Proof: automated screenshot run in CI or a manual pass over the screens in the PRD, recorded with screenshots |
 | DES-10 | 1 | `CLAUDE.md` points to `DESIGN.md` with the rule block above |
 | DES-11 | 2 | Each component has stories for all variants and states (hover, focus, disabled, loading, error) |
 | DES-12 | 2 | Visual regression baseline per key screen, light and dark (`toHaveScreenshot`) |
