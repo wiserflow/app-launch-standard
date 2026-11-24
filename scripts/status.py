@@ -3,7 +3,8 @@
 
 Always exits 0 (it is a report). Areas with Applies = no or n/a (...) are skipped.
 Only items up to --level are counted. Open items whose evidence starts with "→ ID" are
-listed apart as blocked by another item, so one root cause does not read as many gaps.
+listed apart as blocked by another item, so one root cause does not read as many gaps; a pointer to
+an item that is closed, above --level, unknown or in a skipped area does not block, so the item stays a root.
 """
 import argparse
 import re
@@ -15,6 +16,7 @@ from init import parse_area
 
 STATUSES = ["ok", "missing", "diverges", "todo", "n/a"]
 ITEM_ID = re.compile(r"^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$")
+POINTER = re.compile(r"^→\s*([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)")
 
 
 def cells(line):
@@ -82,6 +84,7 @@ def main():
                   "(upgrade drift; add rows with status todo)", file=sys.stderr)
     skipped = sorted(p for p, a in applies.items() if not a)
     items = [i for i in items if applies.get(i[0], True) and i[2] <= args.level]
+    open_ids = {i[1] for i in items if i[3] not in ("ok", "n/a")}
     print(f"Items up to L{args.level}\n")
 
     by_area = {}
@@ -103,8 +106,11 @@ def main():
         print(f"Skipped areas (Applies = no / n/a): {', '.join(skipped)}")
 
     open_items = [i for i in items if i[3] not in ("ok", "n/a")]
-    blocked = [i for i in open_items if i[4].startswith("→")]
-    roots = [i for i in open_items if not i[4].startswith("→")]
+    def blocker(ev):
+        m = POINTER.match(ev)
+        return m.group(1) if m and m.group(1) in open_ids else None
+    blocked = [i for i in open_items if blocker(i[4])]
+    roots = [i for i in open_items if not blocker(i[4])]
     for title, group in ((f"Open items up to L{args.level}", roots), ("Blocked by another item", blocked)):
         if group or title.startswith("Open"):
             print(f"\n{title}: {len(group)}")
