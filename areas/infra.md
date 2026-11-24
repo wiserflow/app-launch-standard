@@ -5,8 +5,8 @@ Assumes self-managed VPS/container cluster behind a CDN/edge proxy (e.g. Cloudfl
 | ID | L | Requirement |
 | --- | --- | --- |
 | INF-01 | 1 | SSH key-only, root login off, password auth off |
-| INF-02 | 1 | Firewall default-deny; only 80/443 public; SSH and cluster ports reachable only via private network/VPN or a single-IP/small allowlist (equivalent, accepted) |
-| INF-03 | 1 | No DB, cache or admin port on a public interface — verified with an external `nmap` (Docker bypasses UFW) |
+| INF-02 | 1 | Firewall default-deny; only 80/443 public; SSH and cluster ports reachable only via private network/VPN or a single-IP/small allowlist (equivalent, accepted). Proof: command output pasted by whoever has host access (e.g. `ufw status verbose` / `nft list ruleset`), with date and host; the code/config saying so alone is not proof |
+| INF-03 | 1 | No DB, cache or admin port on a public interface — verified with an external `nmap` (Docker bypasses UFW). Proof: `nmap` output from another network, or `ss -tlnp` pasted by whoever has host access, with date and host; the code/config saying so alone is not proof |
 | INF-04 | 1 | Unattended security upgrades on every node |
 | INF-05 | 1 | Containers run non-root; no app container mounts `/var/run/docker.sock` (infra agents such as a log collector may, read-only, if listed in an ADR) |
 | INF-06 | 1 | Every service has a `HEALTHCHECK` and memory limits (CPU limits recommended, not required) in the stack file |

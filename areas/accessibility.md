@@ -4,9 +4,9 @@ Target: WCAG 2.2 AA. Many jurisdictions mandate it (EU European Accessibility Ac
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| A11Y-01 | 1 | axe (e.g. via Playwright) shows 0 critical/serious violations on signup, login and the core flows listed in the PRD (checkout only if it exists). Proof: automated run or a recorded manual axe pass with screenshots |
+| A11Y-01 | 1 | axe (e.g. via Playwright) shows 0 critical/serious violations on signup, login and the core flows listed in the PRD (checkout only if it exists); with no PRD yet, the core flows are those recorded in the audit (STATUS.md evidence) or the app's main journeys (signup, login, the core action). Native apps: equivalent check with the platform accessibility inspector/VoiceOver/TalkBack instead of axe (axe stays e.g. for web). Proof: automated run or a recorded manual pass with screenshots |
 | A11Y-11 | 2 | The axe check of A11Y-01 runs in CI on every PR (→ CI-02) |
-| A11Y-02 | 1 | Every core flow completable by keyboard: visible focus, no trap, logical order. Proof: automated keyboard test or a manual pass over the core flows listed in the PRD, recorded |
+| A11Y-02 | 1 | Every core flow completable by keyboard: visible focus, no trap, logical order. Proof: automated keyboard test or a manual pass over the core flows listed in the PRD (or, with no PRD yet, those recorded in the audit or the app's main journeys: signup, login, the core action), recorded. Native apps: same check with the platform screen reader/keyboard support |
 | A11Y-03 | 1 | Every input has a programmatic label; errors are text tied to the field (not color only). Proof: axe label rules plus a manual check of the signup, login and core-flow forms |
 | A11Y-04 | 1 | Contrast ≥ 4.5:1 text, ≥ 3:1 UI and large text. Proof: axe contrast rule or a contrast checker over the landing, auth and core screens and both themes if any |
 | A11Y-05 | 1 | Images and icon buttons have alt/accessible name. Proof: axe rules over the screens of A11Y-01 |

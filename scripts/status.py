@@ -7,6 +7,7 @@ listed apart as blocked by another item, so one root cause does not read as many
 an item that is closed, above --level, unknown or in a skipped area does not block, so the item stays a root.
 """
 import argparse
+import os
 import re
 import sys
 from pathlib import Path
@@ -120,4 +121,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        main()
+        sys.stdout.flush()
+    except BrokenPipeError:  # reader closed early (e.g. `| head`, an output filter): still a report, exit 0
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+    sys.exit(0)

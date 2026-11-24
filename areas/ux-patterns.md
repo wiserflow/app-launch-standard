@@ -22,8 +22,8 @@ How to use: **building** → apply the section's decision table, then its checkl
 | --- | --- | --- |
 | UXP-T1 | 1 | Per screen: ≤ 4 font sizes, ≤ 2 weights (400 + 500/600), ≤ 3 text colors (primary, secondary, muted), all from the scale (→ DES-04); body 14–16 px, nothing below 12 px; line-height 1.5 body, 1.2–1.3 headings |
 | UXP-T2 | 1 | One focal point (proof: screenshot review): blur the screenshot 8 px (squint test) and the page title and the primary action are still the 2 most prominent things; hierarchy is built with weight and color before size |
-| UXP-T3 | 1 | One h1 per page, equal to the nav label and the `<title>` (→ UX-04); heading levels not skipped |
-| UXP-T4 | 1 | Overflow is designed: single-line truncation with ellipsis and the full value on hover/focus; verified with a 60-char name, an 80-char email and a 12-digit number — no overlap, no wrap that breaks the row, no clipped text |
+| UXP-T3 | 1 | One h1 per page, equal to the nav label and the `<title>` (native: screen title; → UX-04); heading levels not skipped |
+| UXP-T4 | 1 | Overflow is designed: single-line truncation with ellipsis and the full value on hover/focus (native: long-press, tap-to-expand or accessibility label); verified with a 60-char name, an 80-char email and a 12-digit number — no overlap, no wrap that breaks the row, no clipped text |
 | UXP-T5 | 1 | Icons: one set (→ DES-07), sizes 16/20/24 only, one stroke weight; no emoji as icons; icon-only buttons limited to universal icons (close, search, more, back, copy) and always with a tooltip (→ A11Y-05) |
 | UXP-T6 | 2 | Numbers that are compared or that change (tables, tiles, timers) use tabular figures; ALL CAPS only on labels of ≤ 3 words; no justified or centered paragraphs; underline only for links |
 
@@ -48,12 +48,12 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-F2 | 1 | Label always visible above the field; a placeholder never replaces the label and holds only an example format; help needed to fill the field is text under it, not a tooltip (field pattern → DES-07) |
 | UXP-F3 | 1 | Only fields the task needs now; optional ones marked "(optional)" instead of asterisks on required; nothing derivable is asked (country from locale, name from the invite); the most common choice is pre-selected |
 | UXP-F4 | 1 | Control chosen by the control table at the top of this section |
-| UXP-F5 | 1 | Correct `type`, `inputmode` and `autocomplete` on every input (email, tel, numeric, one-time-code, new-password) so the right mobile keyboard and password manager appear (→ A11Y-07; proof: lint rule or grep of the input components, or a pass over the PRD core flows); input is forgiving — trims spaces, accepts pasted formatted values (phone with spaces, decimal comma or point) and normalizes them itself (masks → UX-03) |
-| UXP-F6 | 1 | Keyboard: Tab order = visual order; Enter submits single-line forms; Ctrl/⌘+Enter submits forms with a textarea; first field autofocused on desktop in dedicated form pages and dialogs |
+| UXP-F5 | 1 | Correct `type`, `inputmode` and `autocomplete` on every input (email, tel, numeric, one-time-code, new-password) so the right mobile keyboard and password manager appear (native: keyboard type, `textContentType`/autofill hints or equivalent; → A11Y-07; proof: lint rule or grep of the input components, or a pass over the PRD core flows); input is forgiving — trims spaces, accepts pasted formatted values (phone with spaces, decimal comma or point) and normalizes them itself (masks → UX-03) |
+| UXP-F6 | 1 | Keyboard: Tab order = visual order; Enter submits single-line forms; Ctrl/⌘+Enter submits forms with a textarea; first field autofocused on desktop in dedicated form pages and dialogs; native: logical focus order and hardware-keyboard support where the platform offers it |
 | UXP-F7 | 1 | One save model per form: explicit (Save + Cancel visible without scrolling — sticky footer on long forms) or autosave (with status → UXP-K5); never both in one form (settings pages → UXP-A2) |
 | UXP-F8 | 1 | A dirty form is protected: leaving or closing asks "Discard changes?"; typed input survives a failed submit, a session expiry and Back/Forward |
 | UXP-F9 | 2 | More than 8 fields → titled sections of ≤ 7 fields; more than 2 viewports or branching logic → multi-step with "Step 2 of 4", each step a URL, Back keeps data, review summary before the final submit |
-| UXP-F10 | 2 | File upload: click and drag-and-drop; accepted types and max size stated before picking; per-file progress, cancel and retry; file name or preview plus remove after upload |
+| UXP-F10 | 2 | File upload: click and drag-and-drop (web; native: picker/share sheet); accepted types and max size stated before picking; per-file progress, cancel and retry; file name or preview plus remove after upload |
 
 ## Validation and errors (UXP-V)
 
@@ -75,8 +75,8 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-B4 | 1 | Pending: the button shows a spinner, keeps its width and blocks re-click; double-click or Enter-spam creates exactly 1 record |
 | UXP-B5 | 1 | No unexplained disabled control: tooltip or adjacent text gives the reason and the fix; an action the role can never perform is hidden (team accounts only; settings are the exception → UXP-A5) |
 | UXP-B9 | 2 | Plan-gated action → visible with lock and plan name (→ BIL-01) |
-| UXP-B6 | 1 | Links navigate, buttons act: whatever goes to a URL is a real `<a>` (Ctrl/⌘-click and middle-click open a new tab), including clickable rows and cards; whatever mutates is a `<button>` |
-| UXP-B7 | 1 | Every interactive element has visible default, hover, focus-visible, pressed and disabled states (→ DES-11) and reacts in < 100 ms; pointer cursor on clickable elements |
+| UXP-B6 | 1 | Links navigate, buttons act: whatever goes to a URL is a real `<a>` (Ctrl/⌘-click and middle-click open a new tab), including clickable rows and cards; whatever mutates is a `<button>` (web; native: navigation controls vs action controls with the matching accessibility traits/roles) |
+| UXP-B7 | 1 | Every interactive element has visible default, hover, focus-visible, pressed and disabled states (→ DES-11) and reacts in < 100 ms; pointer cursor on clickable elements (hover, focus-visible and cursor: web/desktop only; native touch: pressed, disabled and focus for keyboard/switch control) |
 | UXP-B8 | 2 | More than 3 actions on one object → 1–2 visible plus a "⋯" menu; menu items are icon + verb label; the destructive item is last, separated, in danger color |
 
 ## Destructive actions, undo and confirm (UXP-D)
@@ -98,7 +98,7 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-D3 | 1 | In destructive dialogs the initial focus is on Cancel, Enter does not destroy, Esc cancels; the filled danger style appears only on that final button — triggers in rows, menus and toolbars are neutral or danger text |
 | UXP-D4 | 1 | Confirm dialogs are reserved for destructive, irreversible or costly actions: zero confirms on create, save, navigate or reversible actions (habituation kills the warning) |
 | UXP-D5 | 1 | After a delete the user lands on the parent list with the item gone and a toast — never on a 404, a stale detail page or a list still showing the item |
-| UXP-D6 | 2 | Undo toast stays ≥ 8 s, pauses on hover/focus and truly restores everything (position, relations, attachments); user-created primary objects are soft-deleted with restore from Trash/Archive for ≥ 30 days |
+| UXP-D6 | 2 | Undo toast stays ≥ 8 s, pauses on hover/focus (native: while touched or focused) and truly restores everything (position, relations, attachments); user-created primary objects are soft-deleted with restore from Trash/Archive for ≥ 30 days |
 | UXP-D7 | 2 | Actions with external or costly side effects show a summary with exact counts, recipients and amounts ("Send to 312 contacts", "Charge $1,240.00") before the final button |
 
 ## Feedback: loading, success, failure (UXP-K)
@@ -141,10 +141,10 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-G10 | 2 | Cell details: numbers use tabular figures and equal decimals; booleans are never "true/false"; one line per cell (→ UXP-T4) |
 | UXP-G3 | 1 | First column is the object's name and links to its detail; the whole row is clickable with a hover state (→ UXP-B6); ≤ 7 columns at 1280 px, the rest lives in the detail view or a column picker |
 | UXP-G4 | 1 | Sorting: an intentional default (newest first for activity, A–Z for names); sortable headers show the direction arrow; sort runs server-side whenever the list is paginated (a small list loaded in full may sort client-side) |
-| UXP-G5 | 1 | Sort, filters, search, page and tab live in the URL: reload, share and Back reproduce the exact view; preferences (density, visible columns, collapsed panels) persist per user, not in the URL |
+| UXP-G5 | 1 | Sort, filters, search, page and tab live in the URL (native: restorable navigation state or deep link): reload/relaunch, share and Back reproduce the exact view; preferences (density, visible columns, collapsed panels) persist per user, not in the URL |
 | UXP-G6 | 1 | Lists that can exceed 100 rows are paginated; a smaller list loaded in full needs no pagination but shows its total. Pagination: tables → pages of 25/50/100 with "1–25 of 312" when the total is cheap to count, otherwise cursor "Previous / Next" without a total (API stays cursor-based → PERF-B2); feeds → "Load more" or infinite scroll with position restored on Back; a filtered list shows "12 of 312" (→ PERF-B2) |
 | UXP-G7 | 2 | Bulk actions: checkbox column, Shift-click range, header checkbox selects the page and offers "Select all 312"; an action bar shows the count and the actions; destructive bulk → UXP-D table |
-| UXP-G8 | 2 | Row height 40–48 px (32–36 px in compact mode); header sticky when the table is taller than the viewport; row actions visible on hover AND focus and always visible on touch (→ UXP-B8) |
+| UXP-G8 | 2 | Row height 40–48 px (32–36 px in compact mode); header sticky when the table is taller than the viewport; row actions visible on hover AND focus and always visible on touch (native: swipe actions need a visible equivalent) (→ UXP-B8) |
 | UXP-G9 | 3 | Where users live in the table: column show/hide/resize, saved views, density toggle, inline cell edit, CSV export of the current filtered view |
 
 ## Overlays (UXP-O)
@@ -166,7 +166,7 @@ How to use: **building** → apply the section's decision table, then its checkl
 | UXP-O3 | 1 | Every dialog and drawer: title naming the task, visible close button, Esc and scrim click close (dirty form → UXP-F8), focus trapped then returned to the trigger, page behind does not scroll (→ A11Y-02); overlay sizes → UXP-O7 |
 | UXP-O7 | 2 | Overlay sizes: widths from a fixed set (dialog 400/560/720 px, drawer 400–640 px); height ≤ 90vh with the body scrolling and header + actions pinned |
 | UXP-O4 | 2 | An overlay showing an entity (record drawer, detail dialog) has a URL: Back closes it, reload reopens it, the link can be shared |
-| UXP-O5 | 2 | Tooltips: ≤ 1 sentence, non-essential, no interactive content, open after ~500 ms of hover and on keyboard focus; popovers and menus flip to stay inside the viewport, one open at a time |
+| UXP-O5 | 2 | Tooltips: ≤ 1 sentence, non-essential, no interactive content, open after ~500 ms of hover and on keyboard focus (web/desktop; native touch: n/a, use visible text or a help affordance); popovers and menus flip to stay inside the viewport, one open at a time |
 | UXP-O6 | 2 | No unsolicited overlay on load (what's new, survey, upsell) before the user completes a first action in the session; at most 1 per session (the ONB-05 first-visit tour is the only exception); feature announcements are a dot or dismissible callout next to the feature, gone forever once dismissed (→ SUP-03, ONB-05) |
 
 ## Navigation, URL as state, Back button (UXP-N)
@@ -236,10 +236,10 @@ How to use: **building** → apply the section's decision table, then its checkl
 
 | ID | L | Requirement |
 | --- | --- | --- |
-| UXP-R1 | 1 | One breakpoint set (e.g. 640 / 768 / 1024 / 1280), mobile-first; screens verified at 375, 768 and 1280 (→ DES-09, UX-01; proof: screenshot set or automated viewport check); no page-level horizontal scroll at any width from 320 px (→ A11Y-06) |
+| UXP-R1 | 1 | One breakpoint set (e.g. 640 / 768 / 1024 / 1280), mobile-first; screens verified at 375, 768 and 1280 (native: smallest and largest supported phone and tablet sizes plus largest Dynamic Type/font scale) (→ DES-09, UX-01; proof: screenshot set or automated viewport/simulator check); no page-level horizontal scroll at any width from 320 px (→ A11Y-06) |
 | UXP-R2 | 1 | Touch targets ≥ 44×44 px with ≥ 8 px between neighbours on touch layouts (the 24 px of A11Y-07 is the floor, not the target) |
-| UXP-R3 | 1 | Nothing is hover-only: row actions, tooltip content and menus are reachable by tap and by keyboard |
-| UXP-R4 | 1 | Mobile inputs have font-size ≥ 16 px (no iOS zoom on focus) and pinch-zoom is never disabled; full-height layouts use `100dvh`, respect safe-area insets, and neither the keyboard nor a fixed bar covers the focused field or the submit button |
+| UXP-R3 | 1 | Nothing is hover-only (web/desktop; native touch: n/a by construction): row actions, tooltip content and menus are reachable by tap and by keyboard |
+| UXP-R4 | 1 | Mobile web inputs have font-size ≥ 16 px (no iOS zoom on focus) and pinch-zoom is never disabled; full-height layouts use `100dvh` (native: n/a), respect safe-area insets, and neither the keyboard nor a fixed bar covers the focused field or the submit button |
 | UXP-R5 | 2 | Thumb zone: below 640 px the screen's primary action sits in a sticky bottom bar or the lower half of the screen; destructive and rare actions stay at the top or in a menu (navigation → `app-shell.md`) |
 | UXP-R6 | 2 | Overlays below 640 px: dialogs and drawers become bottom sheets (≤ 90% height, drag handle + close button) or full-screen pages; selects with more than 7 options become a sheet or the native picker |
 | UXP-R7 | 2 | Mobile keeps every core task: secondary panels (filters, metadata, side columns) collapse behind a button instead of disappearing; swipe gestures always have a visible button equivalent and never override system back or pull-to-refresh |

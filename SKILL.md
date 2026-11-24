@@ -13,7 +13,7 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 | --- | --- |
 | `SKILL.md` (this) | Kickoff, how to use, global map, pointer to the runbook |
 | `RUNBOOK.md` | Launch runbook (T-14 to T+30) and operating cadence after launch |
-| `scripts/` | `init.py` (copy the kit into the app repo, create `STATUS.md`), `status.py` (progress report) |
+| `scripts/` | `init.py` (copy the kit into the app repo, create `STATUS.md`), `status.py` (progress report), `setrows.py` (write Status/Evidence rows from TSV under a file lock, so agents never rewrite `STATUS.md` by hand) |
 | `templates/github-actions/` | Reference CI/CD workflows (checks, staging build-once, prod promote-by-retag) implementing CI-16..CI-19 — copy and fill placeholders |
 | `areas/*.md` | One checklist per area — read only the areas in play |
 | `TOOLING.md` | Skills and MCP servers per area and per phase, install commands, security caveats |
@@ -23,16 +23,16 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 
 **Before reading any area or changing anything, ask the user a short kickoff in ONE message** (max 8 questions, each with a suggested default the user can accept with "ok"). Exception: if `docs/launch/STATUS.md` already has the answers in its `## Kickoff` block, read it and confirm in one line instead of asking again.
 
-1. **Track:** new app (greenfield) or already running in production (brownfield)? Default: brownfield if a repo with code exists.
+1. **Track and stack:** new app (greenfield), pre-launch (code exists, not in production yet) or already running in production (brownfield)? Stack already chosen? Record it; never impose the default stack on existing code. Default: brownfield if the app is live, pre-launch if code exists but is not live; keep the stack that exists.
 2. **Goal now:** full launch audit / prepare a launch / improve one part (→ ask which part, then `areas/spec-flow.md`) / review the UX of a screen? Default: full launch audit.
 3. **Paid product?** Billing model (subscription, usage, one-off, free). Default: free.
 4. **Accounts:** one person per account, team accounts (a company or studio with members and roles), or both? Default: one person per account.
 5. **Surfaces:** web, PWA, iOS, Android, desktop, CLI, extension, bot, API/MCP, other (→ `areas/platforms.md`). Default: web only.
 6. **Languages and countries served:** drives i18n, privacy law, payment methods. Default: one language, one country.
-7. **Stack:** already chosen? Record it; never impose the default stack on a brownfield app. Default: keep what exists.
-8. **Biggest pain right now and deadline.** No default.
+7. **Biggest pain right now.** No default.
+8. **Deadline:** launch date or next milestone. Default: no fixed date.
 
-**Small "improve X" request:** ask only 1, 2 and 8, plus at most 2 questions specific to X, then go to `areas/spec-flow.md`.
+**Small "improve X" request:** ask only 1, 2, 7 and 8, plus at most 2 questions specific to X, then go to `areas/spec-flow.md`.
 
 **Answers → scope.** Mark these areas `n/a (reason)` in `STATUS.md` (check the "Applies when" column of the Global map; n/a areas are kept, not deleted):
 
@@ -40,6 +40,7 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 | --- | --- |
 | Not paid | BIL n/a |
 | One person per account | ORG mostly n/a (keep the items about a single-user account); CRM/GRW n/a unless sales-led |
+| Family / household accounts (several people share one account) | Team accounts: ORG and SHL apply; org switcher, org URL slug and member search may be `n/a (reason)` when a person belongs to one household and households are small |
 | Web only | MOB n/a; PLAT per-target sections n/a (keep the 19 general PLAT items) |
 | Non-web surfaces | PLAT target sections for each chosen surface in scope; MOB if native app or PWA |
 | No AI/ML in the product (no LLM, no vision, speech or other ML API) | AI n/a |
@@ -55,9 +56,10 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 
 1. **Kickoff — pick the track** (`areas/scaffold.md`):
    - **Greenfield** (new app): create the repo from the starter, then copy this folder to `<repo>/docs/launch/`.
+   - **Pre-launch** (code exists, not in production): same as brownfield, but with no live users or data the order is free; follow *Pre-launch* in `areas/scaffold.md`.
    - **Brownfield** (app already running): never regenerate the base over it. Copy this folder to `<repo>/docs/launch/` and follow *Brownfield adoption* in `areas/scaffold.md` (gap audit → safety net → kit one package at a time).
 
-   `scripts/init.py` does the copy (including `scripts/` and `templates/`) and creates `STATUS.md`; `scripts/status.py` reports progress.
+   `scripts/init.py` does the copy (including `scripts/` and `templates/`) and creates `STATUS.md`; `scripts/status.py` reports progress; `scripts/setrows.py` writes item rows (one call per batch, `--prefixes` per area when agents run in parallel).
 
    Then go through the global map and mark each area `applies` / `n/a (reason)` in `docs/launch/STATUS.md` — n/a areas are not deleted, so the decision is visible.
 2. **Per phase:** before starting a phase, the agent reads only that phase's area files and installs that phase's tools from `TOOLING.md` (ask the user first; project scope).
@@ -65,6 +67,7 @@ Project-agnostic standard for building and launching an app or SaaS that looks a
 4. **Evidence:** mark `ok` only with evidence next to it (test name, screenshot path, URL, command output). "Deployed" is not evidence; "exercised in staging as a user" is.
    - Partly met → `diverges`; the evidence names which parts fail.
    - Fails only because another item fails (e.g. no CI) → status `missing`/`diverges` with evidence starting `→ CI-01`; `status.py` lists these apart, so one root cause is not counted as many gaps. Mark it even when the target is L2: while the target is outside `--level` (or already closed), the item stays in the root list.
+   - `→ ID` inside an item's requirement text is a cross-reference, not a status: audit the item on its own, and use evidence `→ ID` only when it fails solely because the target fails (e.g. CI-04 with no pipeline at all).
    - Area applies only in part → Applies `partial (reason)`, then mark the items that do not apply `n/a (reason)`.
 5. **Reuse:** before building an item, check whether a previous app already solved it and copy that implementation.
 6. **Changing an existing app** (improve a screen, add a feature): follow `areas/spec-flow.md` — a short spec + slices, acceptance by item IDs; no full launch pass.
