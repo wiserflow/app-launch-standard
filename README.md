@@ -17,7 +17,7 @@ Tools mentioned are suggestions; the requirement is the item.
 npx skills add wiserflow/app-launch-standard
 ```
 
-Install it in each app repo (project scope, not global). Then `python3 .claude/skills/app-launch-standard/scripts/init.py` copies the kit to `docs/launch/` and creates `STATUS.md`. To upgrade, update the skill and rerun `init.py --force`: it keeps `STATUS.md` and adds the new items.
+Install it in each app repo (project scope, not global). You never run the scripts yourself: just talk to your agent. It sets up `docs/launch/` (the checklist status of your app), reports progress when you ask, and upgrades the copy when you say "update the launch standard in this app".
 
 Then ask your agent things like:
 
@@ -37,7 +37,7 @@ Without the skill CLI, copy this folder into your repo (e.g. `docs/launch/`) and
 | `areas/*.md` | One checklist per area — agents read only the areas in play |
 | `TOOLING.md` | Skills and MCP servers per area and phase |
 | `REFERENCES.md` | Reference repositories (boilerplates, checklists, OSS tools) |
-| `scripts/` | `init.py` copies the kit into your repo and creates `docs/launch/STATUS.md`; `status.py` reports progress; `check.py` validates IDs, levels and quoted counts (runs in CI). Python 3, stdlib only |
+| `scripts/` | Helpers the agent runs for you (set up `docs/launch/`, record item status, report progress, validate the standard in CI). Python 3, stdlib only |
 | `templates/github-actions/` | Reference CI/CD workflows: checks on PR/push, build once + staging deploy on `main`, promote-by-retag to prod on tag (see its `README.md`) |
 
 ## Contributing
