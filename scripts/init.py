@@ -12,14 +12,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 FILES = ["SKILL.md", "RUNBOOK.md", "TOOLING.md", "REFERENCES.md"]
 QUESTIONS = [
-    "Track: greenfield (new app) or brownfield (already in production)?",
+    "Track and stack: greenfield (new app), pre-launch (code exists, not in production) or brownfield (in production)? Stack already chosen?",
     "Goal now: full launch audit / prepare a launch / improve one part / review a screen's UX?",
     "Paid product? Billing model?",
     "Accounts: one person per account, team accounts (members, roles), or both?",
     "Target surfaces (web, PWA, iOS, Android, desktop, CLI, extension, bot, API/MCP)?",
     "Languages and countries served?",
-    "Stack already chosen?",
-    "Biggest pain right now and deadline?",
+    "Biggest pain right now?",
+    "Deadline (launch date or next milestone)?",
 ]
 HEADING = re.compile(r"^#\s+.*\(([^)]+)\)\s*$")
 ITEM = re.compile(r"^\|\s*([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)\s*\|\s*([123])\s*\|")
@@ -112,7 +112,7 @@ def main():
     print(f"\nCopied the standard into {target}\n\nNext steps:\n"
           f"  1. Ask the agent to follow {args.target}/SKILL.md (it asks the kickoff questions first).\n"
           f"  2. Answers go in the Kickoff block of {args.target}/STATUS.md; set Applies=no (with a reason) for n/a areas.\n"
-          f"  3. Mark items ok / missing / diverges / n/a with evidence; start it with `→ ID` when an item fails only because that item fails.\n"
+          f"  3. Mark items ok / missing / diverges / n/a with evidence (scripts/setrows.py writes rows from TSV); start it with `→ ID` when an item fails only because that item fails.\n"
           f"  4. Report progress: python3 {args.target}/scripts/status.py --file {args.target}/STATUS.md")
     return 0
 

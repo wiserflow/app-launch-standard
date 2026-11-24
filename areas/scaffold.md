@@ -77,4 +77,12 @@ How much of the kit fits depends on the stack: same stack as the kit (e.g. Hono 
 | SCF-12 | 1 | Kit adopted one package per PR, behind a flag where it changes runtime behavior, with a rollback path; the affected journey has a smoke/e2e test **before** the swap; schema changes are additive first (expand → migrate → contract) |
 | SCF-13 | 1 | Safety net before any kit adoption: OBS-01 error tracking, OBS-03 health checks, DB-03 backup with restore tested, SEC-07 secrets out of the repo, CI-06 rollback command. Proof: `ok` only when all five are `ok` (→ OBS-01, OBS-03, DB-03, SEC-07, CI-06); otherwise `missing`, naming the open sub-items |
 
+## Pre-launch (code exists, not in production)
+
+Same as brownfield: do not regenerate the base; mark SCF-01, SCF-03, SCF-05 `n/a` (replaced) and audit SCF-10..13. With no live users or production data:
+
+- Order of attack is free (by phase or by risk); kit packages can replace code directly.
+- SCF-12: the smoke/e2e test before the swap still applies; the flag, rollback path and expand → migrate → contract apply only once there is production data — until then mark them in the evidence as `n/a before launch`.
+- SCF-13: must be `ok` before launch (and before any real user data), not before the first kit package.
+
 References: [Better-T-Stack docs](https://better-t-stack.dev) · [shadcn registry](https://ui.shadcn.com/docs/registry) · comparable full starters to borrow patterns from: open-saas, ixartz SaaS-Boilerplate, BoxyHQ saas-starter-kit (see `REFERENCES.md`).

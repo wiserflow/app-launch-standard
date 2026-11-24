@@ -3,7 +3,7 @@
 | ID | L | Requirement |
 | --- | --- | --- |
 | DB-01 | 1 | App connects with a non-superuser role that does not own the tables; migrations use a separate role |
-| DB-02 | 1 | Postgres not reachable from the internet; connections over TLS or private overlay network |
+| DB-02 | 1 | Postgres not reachable from the internet; connections over TLS or private overlay network. Proof: external `nmap`/connection attempt from another network or `ss -tlnp` on the host, pasted by whoever has access, with date and host; the code/config saying so alone is not proof |
 | DB-03 | 1 | Daily backup: (a) off-site, (b) encrypted, (c) retention ≥ 30 days, (d) **automated restore test** into a scratch DB, timed; score each part |
 | DB-04 | 1 | Every migration committed and applied by the pipeline, or by a scripted, logged deploy step when no CI exists (→ CI-02), never by hand; ORM drift check passes (`drizzle-kit check`) |
 | DB-05 | 1 | Every tenant-scoped table has the owner/tenant key `NOT NULL` (`tenant_id`; owner `user_id` for one person per account; n/a only if the app has no per-owner data); isolation by RLS or tested scoped query layer (see SEC-02) |

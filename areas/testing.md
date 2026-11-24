@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | REL-01 | 1 | Staging has the same topology as prod (same services, engines and config shape; node count and replicas may be smaller) |
 | REL-07 | 2 | Staging is deployed automatically on merge (→ REL-01, CI-03) |
-| REL-02 | 1 | E2E tests on critical journeys: signup, login, payment, core action |
+| REL-02 | 1 | E2E tests on critical journeys: signup, login, payment, core action. Payment only when the product charges (n/a when free) |
 | REL-03 | 1 | Custom error pages / error boundary in the app (the framework default error UI does not count unless it shows no stack trace and offers a way back); user never sees a stack trace |
 | REL-04 | 1 | Stateless app servers; config only via env vars |
 | REL-05 | 2 | Gradual rollout via feature flags (ADM-05) or canary |
